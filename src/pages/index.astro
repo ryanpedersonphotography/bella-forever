@@ -1,5 +1,5 @@
 ---
-import WatercolorHero from '../components/WatercolorHero.astro';
+import HeroStage from '../components/HeroStage.astro';
 const year = new Date().getFullYear();
 ---
 
@@ -11,87 +11,297 @@ const year = new Date().getFullYear();
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Bella's Dresser - A tiny fairytale boutique where little-daydream dresses come to life. Step into our watercolor world." />
 
-  <!-- Fonts: Elegant script + friendly readable sans -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Quicksand:wght@400;500;600&family=Short+Stack&display=swap" rel="stylesheet" />
+    <!-- Fonts: Matsu Theme (Nunito + PT Serif) + Existing (Cormorant/Quicksand for legacy support if needed) -->
 
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
 
-  <style>
-    /* =============================================
-       BELLA'S DRESSER - WATERCOLOR STORYBOOK THEME
-       A dreamy, hand-painted aesthetic
-       ============================================= */
-    
-    :root {
-      /* New Watercolor Palette - User Provided */
-      --sky-light: #eaffff;
-      --sky-blue: #c2dcf7;
-      --sky-pink: #ffebff;
-      --sky-lavender: #e4d7f0; /* Kept as accent */
-      
-      --coral-soft: #f5c7e0;
-      --coral-warm: #e8937a; /* Kept for depth */
-      --rose-pink: #f5c7e0;
-      --blush: #ffebff;
-      
-      --sage-light: #d9f6ce;
-      --sage-green: #9ab88f; /* Kept for depth */
-      --sage-deep: #7da06d;
-      
-      --sunshine: #f7e4a8;
-      --butter: #ffffed;
-      
-      --terracotta: #c9956c;
-      --earth-brown: #a67c5b;
-      --soil: #8b6b4f;
-      
-      --cream: #ffffed;
-      --cream-warm: #faf5ed;
-      --paper: #fff0cb; /* Updated to the warm paper color */
-      
-      --ink: #4a3f3a;
-      --ink-soft: #6d5f58;
-      --ink-light: #9a8b82;
-      
-      /* Watercolor Filter Variables */
-      --shadow: 4px;
-      --hue: 0deg;
-      --sat: 100%;
-      
-      /* Storybook dimensions */
-      --hero-height: 100vh;
-      --grass-height: 25vh;
-      --content-max: 1100px;
-    }
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;700&family=PT+Serif:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Quicksand:wght@400;500;600&family=Short+Stack&display=swap" rel="stylesheet" />
 
-    html {
-      scroll-behavior: smooth;
-      /* Background texture for the whole page */
-      background: var(--paper);
-      background-image: linear-gradient(var(--paper), var(--paper)); 
-      /* If we had the texture: url(texture.png); */
-      min-height: 100%;
-    }
+  
 
-    body {
-      font-family: "Quicksand", "Segoe UI", system-ui, sans-serif;
-      color: #392b17dd; /* Dark brown ink from sample */
-      line-height: 1.7;
-      overflow-x: hidden;
-      /* Blend mode for the watercolor effect */
-      background-blend-mode: multiply;
-    }
+    <style>
 
-    h1, h2, h3, h4, h5 {
-      font-family: "Short Stack", cursive, sans-serif;
-    }
+      /* =============================================
+
+         MATSU THEME + BELLA'S DRESSER
+
+         Exact style adoption from daisyui-matsu-theme
+
+         ============================================= */
+
+      
+
+      :root {
+
+        /* MATSU THEME VARIABLES (OKLCH) */
+
+        /* Base colors */
+
+        --color-base-100: oklch(0.91 0.048 83.6); /* background */
+
+        --color-base-200: oklch(0.92 0.042 83.6); /* card/popover */
+
+        --color-base-300: oklch(0.86 0.064 83.7); /* muted */
+
+        --color-base-content: oklch(0.41 0.077 78.9); /* foreground */
+
+  
+
+        /* Primary colors */
+
+        --color-primary: oklch(0.71 0.097 111.7);
+
+        --color-primary-content: oklch(0.98 0.005 0);
+
+        --color-primary-focus: oklch(0.59 0.096 111.8); /* primary-border */
+
+  
+
+        /* Secondary colors */
+
+        --color-secondary: oklch(0.88 0.055 83.6);
+
+        --color-secondary-content: oklch(0.51 0.077 78.9);
+
+  
+
+        /* Accent colors */
+
+        --color-accent: oklch(0.86 0.055 83.6);
+
+        --color-accent-content: oklch(0.26 0.016 0);
+
+  
+
+        /* Neutral colors */
+
+        --color-neutral: oklch(0.74 0.063 80.8); /* border/input */
+
+        --color-neutral-content: oklch(0.51 0.077 74.3); 
+
+  
+
+        /* Error/Destructive */
+
+        --color-error: oklch(0.63 0.24 29.2);
+
+        
+
+        /* Shadows */
+
+        --shadow-matsu: 0 2px 0 0 oklch(0.74 0.063 80.8);
+
+        --shadow-primary: 0 2px 0 0 var(--color-primary-focus);
+
+  
+
+        /* Border Radius */
+
+        --radius-box: 0.625rem;
+
+        --border-width: 2px;
+
+  
+
+        /* BELLA'S DRESSER CUSTOM PALETTE (Kept for Watercolor strokes) */
+
+        --sky-light: #eaffff;
+
+        --sky-blue: #c2dcf7;
+
+        --sky-pink: #ffebff;
+
+        --sky-lavender: #e4d7f0;
+
+        --coral-soft: #f5c7e0;
+
+        --coral-warm: #e8937a;
+
+        --rose-pink: #f5c7e0;
+
+        --blush: #ffebff;
+
+        --sage-light: #d9f6ce;
+
+        --sage-green: #9ab88f;
+
+        --sage-deep: #7da06d;
+
+        --sunshine: #f7e4a8;
+
+        --butter: #ffffed;
+
+        --terracotta: #c9956c;
+
+        --earth-brown: #a67c5b;
+
+        --soil: #8b6b4f;
+
+        
+
+        --cream: var(--color-base-100); /* Map legacy to Matsu */
+
+        --paper: var(--color-base-100);
+
+        --ink: var(--color-base-content);
+
+        --ink-soft: oklch(0.51 0.077 78.9); /* Mapped to secondary contentish */
+
+        
+
+        /* Watercolor Filter Variables */
+
+        --shadow: 4px;
+
+        --hue: 0deg;
+
+        --sat: 100%;
+
+        
+
+        --hero-height: 100vh;
+
+        --content-max: 1100px;
+
+      }
+
+  
+
+      * {
+
+        box-sizing: border-box;
+
+        margin: 0;
+
+        padding: 0;
+
+      }
+
+  
+
+      html {
+
+        scroll-behavior: smooth;
+
+        background: var(--color-base-100);
+
+        min-height: 100%;
+
+      }
+
+  
+
+          body {
+
+  
+
+            font-family: "Nunito", "Quicksand", sans-serif;
+
+  
+
+            font-weight: 700; /* Matsu uses bold by default */
+
+  
+
+            color: var(--color-base-content);
+
+  
+
+            line-height: 1.7;
+
+  
+
+            overflow-x: hidden;
+
+  
+
+          }
+
+  
+
+      
+
+  
+
+          /* Matsu Theme Texture Overlay */
+
+  
+
+          .texture {
+
+  
+
+            background-image: url(https://hmarzban.github.io/daisyui-matsu-theme/assets/texture.jpg);
+
+  
+
+            background-size: 100% 100%;
+
+  
+
+            background-repeat: repeat;
+
+  
+
+            opacity: 0.12;
+
+  
+
+            mix-blend-mode: multiply;
+
+  
+
+            z-index: 100;
+
+  
+
+            isolation: isolate;
+
+  
+
+            position: fixed;
+
+  
+
+            inset: 0;
+
+  
+
+            width: 100vw;
+
+  
+
+            height: 100dvh;
+
+  
+
+            pointer-events: none;
+
+  
+
+          }
+
+  
+
+      
+
+  
+
+          h1, h2, h3, h4, h5 {
+
+  
+
+            font-family: "PT Serif", serif;
+
+  
+
+            font-weight: 700;
+
+  
+
+          }
 
     img {
       max-width: 100%;
@@ -575,105 +785,93 @@ const year = new Date().getFullYear();
     }
 
     /* =============================================
-       WATERCOLOR COMPONENTS
+       MATSU COMPONENTS (Refactored from Watercolor)
        ============================================= */
 
-    /* General Watercolor Box Container (Cards, Sections) */
+    /* Matsu Card Style (formerly watercolor-box) */
     .watercolor-box {
-      --hue: 240deg;
-      --sat: 130%;
-      --con: 1.7;
-      --bri: 1.4;
       position: relative;
       display: flex;
       flex-direction: column;
-      isolation: isolate;
       padding: 1.75rem;
-      color: #392b17cc;
-      border-radius: 20px;
-      mix-blend-mode: multiply;
+      border-radius: var(--radius-box);
+      border: var(--border-width) solid var(--color-neutral);
+      background-color: var(--color-base-200); /* Slightly darker card bg */
+      box-shadow: var(--shadow-matsu);
+      color: var(--color-base-content);
+      transition: all 150ms ease;
       margin-bottom: 1rem;
-      background: transparent; /* Ensure no solid bg interferes */
+    }
+    
+    .watercolor-box:hover {
+      /* Matsu cards don't typically jump, but buttons do. 
+         If we want interactive cards: */
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 0 oklch(0.74 0.063 80.8); /* Smaller shadow on press */
     }
 
-    /* The Watercolor Background & Border Pseudo-element */
+    /* Remove the heavy watercolor filter overlay from content cards for the clean Matsu look */
     .watercolor-box::before {
-      content: "";
-      inset: 0;
-      position: absolute;
-      border-radius: inherit;
-      background: rgb(0 0 0 / 100%); /* Black base for filter */
-      filter: url(#watercolor) drop-shadow(0 0em 0em rgba(255,255,255,1)) sepia(1) brightness(var(--bri,1.8)) contrast(var(--con,1)) saturate(var(--sat)) hue-rotate(var(--hue));
-      translate: -1px -1px;
-      opacity: 0.9;
-      box-shadow: 0 0 0px 0px black;
-      transition: all 0.25s ease-out;
-      z-index: -1;
+      display: none;
     }
 
     .watercolor-box h3 {
-      font-family: "Short Stack", cursive, sans-serif;
+      font-family: "PT Serif", serif;
       font-size: 1.5rem;
       margin-bottom: 1rem;
-      color: inherit;
+      font-weight: 700;
     }
     
     .watercolor-box p {
       margin-bottom: 0.75rem;
       font-size: 1rem;
+      font-family: "Nunito", sans-serif;
+      font-weight: 500;
     }
 
-    /* Variation for 'How We Design' (Sketch Card) */
+    /* Specific Card Tweaks */
     .sketch-card {
-      --hue: 190deg;
-      --sat: 100%;
-      --bri: 1.6; /* Lighter for content */
+      background-color: var(--color-base-100); /* White/Base background */
     }
 
-    /* Variation for 'Watercolor Quote' */
     .watercolor-card {
-      --hue: 290deg;
-      --sat: 80%;
-      --bri: 1.5;
+      background-color: var(--color-secondary);
+      color: var(--color-secondary-content);
+      border-color: var(--color-secondary);
+    }
+    
+    .watercolor-card strong {
+      color: inherit;
     }
 
-    /* Variation for Dress Cards */
+    /* Dress Cards */
     .dress-card {
-      --hue: 150deg; /* Greenish tint by default */
-      --sat: 60%;
-      --bri: 1.7; /* Very light */
       padding: 1.25rem;
-      transition: transform 0.3s ease;
+      background-color: var(--color-base-100);
     }
     
     .dress-card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 0 0 var(--color-neutral);
     }
-    
-    /* Different tints for dresses */
-    .dress-card:nth-child(2n) { --hue: 10deg; --bri: 1.6; } /* Red/Pinkish */
-    .dress-card:nth-child(3n) { --hue: 200deg; --bri: 1.6; } /* Blueish */
 
     .dress-name {
-      font-family: "Short Stack", cursive;
+      font-family: "PT Serif", serif;
       font-size: 1.3rem;
       margin-bottom: 0.5rem;
     }
 
-    /* Variation for Visit Section */
+    /* Visit Section */
     .visit-main {
-      --hue: 40deg; /* Yellowish/Orange */
-      --sat: 100%;
-      --bri: 1.6;
+      background-color: var(--color-base-200);
     }
 
     .visit-details {
-      --hue: 330deg; /* Pinkish */
-      --sat: 70%;
-      --bri: 1.6;
+      background-color: var(--color-base-100);
+      border: var(--border-width) dashed var(--color-neutral); /* Dashed for "details" feel */
     }
 
-    /* Watercolor Tags */
+    /* Matsu Badges (Tags) */
     .tags {
       display: flex;
       flex-wrap: wrap;
@@ -682,81 +880,60 @@ const year = new Date().getFullYear();
     }
 
     .watercolor-tag {
-      padding: 0.5em 0.75em;
-      font-size: 0.85rem;
-      font-weight: bold;
-      isolation: isolate;
-      position: relative;
-      border-radius: 5px;
-      overflow: visible;
-      /* Mask image for ragged edges if desired, but let's stick to the filter for now */
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 700;
+      border-radius: var(--radius-box);
+      border: var(--border-width) solid var(--color-neutral);
+      background-color: var(--color-base-100);
+      color: var(--color-base-content);
+      box-shadow: 0 2px 0 0 var(--color-neutral);
+      transition: all 150ms;
+    }
+    
+    .watercolor-tag::before { display: none; } /* Remove filter */
+
+    .watercolor-tag:hover {
+      transform: translateY(1px);
+      box-shadow: 0 1px 0 0 var(--color-neutral);
     }
 
-    .watercolor-tag::before {
-      --hue: 290deg;
-      --sat: 100%;
-      --con: 1;
-      --bri: 1.5;
-      content: "";
-      inset: 1px;
-      position: absolute;
-      border-radius: inherit;
-      background: rgb(0 0 0 / 100%);
-      filter: url(#watercolor2) drop-shadow(0 0em 0em rgba(200,200,200,1)) sepia(1) brightness(var(--bri,1.8)) contrast(var(--con,1)) saturate(var(--sat)) hue-rotate(var(--hue));
-      translate: -1px -1px;
-      opacity: 0.8;
-      z-index: -1;
-    }
-
-    /* Specific Tag Colors */
-    .watercolor-tag:nth-child(1)::before { --hue: 0deg; }
-    .watercolor-tag:nth-child(2)::before { --hue: 120deg; }
-    .watercolor-tag:nth-child(3)::before { --hue: 200deg; }
-
-    /* Updated Button Style */
+    /* Matsu Button Style */
     .btn-primary {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      font-family: "Short Stack", sans-serif;
-      font-size: 1.1rem;
-      position: relative;
-      color: white;
-      isolation: isolate;
-      border: none !important;
-      outline: none !important;
-      box-shadow: none !important;
-      text-shadow: 0 1px 2px rgb(0 0 0 / 33%);
-      background: transparent; /* Filter handles bg */
-      padding: 0.9rem 1.8rem;
-      border-radius: 10px;
-      mix-blend-mode: multiply;
+      font-family: "Nunito", sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-box);
+      border: var(--border-width) solid var(--color-primary-focus);
+      background-color: var(--color-primary);
+      color: var(--color-primary-content);
+      box-shadow: 0 2px 0 0 var(--color-primary-focus);
       cursor: pointer;
       text-decoration: none;
-      --bri: 0.4; /* Darker for contrast with white text */
-      --hue: 0deg;
+      transition: all 150ms;
+      /* Remove old filter/mix-blend */
+      mix-blend-mode: normal;
+      isolation: auto;
+      text-shadow: none;
     }
 
-    .btn-primary::before {
-      content: "";
-      inset: 0;
-      position: absolute;
-      border-radius: inherit;
-      background: rgb(0 0 0 / 100%);
-      filter: url(#watercolor) drop-shadow(0 0em 0em rgba(255,255,255,1)) sepia(1) brightness(var(--bri,1)) contrast(0.75) saturate(100%) hue-rotate(var(--hue)) drop-shadow(0 4px 0.25px rgba(0,0,0,0.25));
-      translate: -1px -1px;
-      opacity: 0.9;
-      z-index: -1;
-      transition: all 0.25s ease-out;
-    }
+    .btn-primary::before { display: none; } /* Remove watercolor filter */
 
-    .btn-primary:hover::before {
-      opacity: 1;
-      box-shadow: 0 0 0px 2px black; /* Helper outline on hover */
+    .btn-primary:hover {
+      transform: translateY(2px);
+      box-shadow: none; /* "Pressed" effect */
     }
-
-    /* Clean up old stuff */
-    /* .sketch-card, .doodle, .rough-box removed/replaced above */
+    
+    .btn-primary:active {
+      transform: translateY(2px);
+    }
 
     .visit-details h4 {
       font-family: "Cormorant Garamond", Georgia, serif;
@@ -903,30 +1080,13 @@ const year = new Date().getFullYear();
   </style>
 </head>
 <body>
+  <div class="texture"></div>
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
   <!-- =============================================
        STORYBOOK HERO (New Watercolor Implementation)
        ============================================= -->
-  <WatercolorHero>
-    <div class="hero-title-area" style="position: relative; top: auto; left: auto; right: auto; margin-bottom: 2rem;">
-      <img 
-        src="/bellas-dresser-logo.svg" 
-        alt="Bella's Dresser" 
-        class="logo-image"
-      />
-      <p class="hero-tagline">
-        "Where little-daydream dresses come to life."
-      </p>
-    </div>
-
-    <div class="hero-cta" style="position: relative; bottom: auto; left: auto; transform: none;">
-      <a href="#visit" class="btn-primary">
-        Step Inside
-        <span aria-hidden="true">→</span>
-      </a>
-    </div>
-  </WatercolorHero>
+  <HeroStage />
 
   <!-- =============================================
        MAIN CONTENT
@@ -1141,43 +1301,5 @@ const year = new Date().getFullYear();
       © {year} Bella's Dresser · A storybook dress atelier
     </p>
   </footer>
-
-  <!-- Global SVG Filters for Watercolor Effect -->
-  <svg style="position: absolute; width: 0; height: 0; overflow: hidden;">
-    <defs>
-        <filter id="watercolor">
-            <feTurbulence result="noise-lg" type="fractalNoise" baseFrequency=".0125" NumOctaves="2" seed="1222" />
-            <feTurbulence result="noise-md" type="fractalNoise" baseFrequency=".12" NumOctaves="3" seed="11413" />
-            <feComposite result="BaseGraphic" in="SourceGraphic" in2="noise-lg" operator="arithmetic" k1="0.3" k2="0.45" k4="-.07" />
-            <feMorphology id="water" result="layer-1" in="BaseGraphic" operator="dilate" radius="0.5" />
-            <feDisplacementMap result="layer-1" in="layer-1" in2="noise-lg" xChannelSelector="R" yChannelSelector="B" scale="2" />
-            <feDisplacementMap result="layer-1" in="layer-1" in2="noise-md" xChannelSelector="R" yChannelSelector="B" scale="3" />
-            <feDisplacementMap result="mask" in="layer-1" in2="noise-lg" xChannelSelector="A" yChannelSelector="A" scale="4" />
-            <feGaussianBlur result="mask" in="mask" stdDeviation="6" />
-            <feComposite result="layer-1" in="layer-1" in2="mask" operator="arithmetic" k1="1" k2=".25" k3="-.25" k4="0" />
-            <feDisplacementMap result="layer-2" in="BaseGraphic" in2="noise-lg" xChannelSelector="G" yChannelSelector="R" scale="2" />
-            <feDisplacementMap result="layer-2" in="layer-2" in2="noise-md" xChannelSelector="A" yChannelSelector="G" scale="3" />
-            <feDisplacementMap result="glow" in="BaseGraphic" in2="noise-lg" xChannelSelector="R" yChannelSelector="A" scale="5" />
-            <feMorphology result="glow-diff" in="glow" operator="erode" radius="2" />
-            <feComposite result="glow" in="glow" in2="glow-diff" operator="out" />
-            <feGaussianBlur result="glow" in="glow" stdDeviation=".5" />
-            <feComposite id="color" result="layer-2" in="layer-2" in2="glow" operator="arithmetic" k1="1.2" k2="0.55" k3=".3" k4="-0.2" />
-            <feComposite result="watercolor" in="layer-1" in2="layer-2" operator="over" />
-        </filter>
-        
-        <filter id="watercolor2">
-            <feTurbulence result="noise-lg" type="fractalNoise" baseFrequency=".0125" NumOctaves="2" seed="1222" />
-            <feTurbulence result="noise-md" type="fractalNoise" baseFrequency=".12" NumOctaves="3" seed="11413" />
-            <feComposite result="BaseGraphic" in="SourceGraphic" in2="noise-lg" operator="arithmetic" k1="0.3" k2="0.35" k4="-.05" />
-            <feDisplacementMap result="layer-2" in="BaseGraphic" in2="noise-lg" xChannelSelector="G" yChannelSelector="R" scale="2" />
-            <feDisplacementMap result="layer-2" in="layer-2" in2="noise-md" xChannelSelector="A" yChannelSelector="G" scale="3" />
-            <feDisplacementMap result="glow" in="BaseGraphic" in2="noise-lg" xChannelSelector="R" yChannelSelector="A" scale="4" />
-            <feMorphology result="glow-diff" in="glow" operator="erode" radius="2" />
-            <feComposite result="glow" in="glow" in2="glow-diff" operator="out" />
-            <feGaussianBlur result="glow" in="glow" stdDeviation="4" />
-            <feComposite id="color" result="layer-2" in="layer-2" in2="glow" operator="arithmetic" k1="0.65" k2="1.0" k3="0.4" k4="-0.15" />
-        </filter>
-    </defs>
-  </svg>
 </body>
 </html>

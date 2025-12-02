@@ -1,0 +1,100 @@
+---
+---
+<section class="hero-stage">
+  <div class="hero-stage__inner">
+    <!-- Layer 1: Background (Sky Wash) -->
+    <!-- Fills the 1920x1080 stage -->
+    <div id="hero-bg" class="hero-layer">
+      <img src="/sd.png" alt="Watercolor Sky Background" />
+    </div>
+
+    <!-- Layer 2: Storefront -->
+    <!-- Positioned at center-bottom of design space -->
+    <!-- Design X: 960 (Center), Design Y: 700 (Approx bottom third) -->
+    <div id="hero-store" class="hero-layer">
+      <img src="/bella-store-transparent.png" alt="Bella's Storefront" />
+    </div>
+
+    <!-- Layer 3: Grass Foreground -->
+    <!-- Overlapping bottom, slightly lower than store -->
+    <!-- Design X: 960, Design Y: 950 -->
+    <div id="hero-grass" class="hero-layer">
+      <img src="/grass-foreground.png" alt="Grass Foreground" />
+    </div>
+  </div>
+</section>
+
+<style>
+  /* The viewport container */
+  .hero-stage {
+    position: relative; /* Keeps it in document flow */
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #f8f6f1; /* Match paper base */
+  }
+
+  /* The fixed design stage (1920x1080) */
+  .hero-stage__inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    transform-origin: top left;
+    /* GSAP handles transform: translate(...) scale(...) */
+  }
+
+  /* Layers */
+  .hero-layer {
+    position: absolute;
+    /* No percentages for positioning here, handled via IDs or inline */
+  }
+
+  /* Background: Fills stage */
+  #hero-bg {
+    left: 0px;
+    top: 0px;
+    width: 1920px;
+    height: 1080px;
+    z-index: 0;
+  }
+  #hero-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Store: Center anchor */
+  #hero-store {
+    left: 960px;
+    top: 700px;
+    width: 1000px; /* Fixed pixel width in design space */
+    /* transform: translate(-50%, -50%);  <-- Handled by GSAP xPercent/yPercent */
+    z-index: 1;
+    opacity: 0; /* GSAP handles fade in */
+  }
+  #hero-store img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 10px 20px rgba(60, 45, 30, 0.15));
+  }
+
+  /* Grass: Center anchor */
+  #hero-grass {
+    left: 960px;
+    top: 950px;
+    width: 2200px; /* Wider to allow parallax movement */
+    /* transform: translate(-50%, -50%); <-- Handled by GSAP */
+    z-index: 2;
+    opacity: 0; /* GSAP handles fade in */
+  }
+  #hero-grass img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+</style>
+
+<script src="../scripts/heroStage.ts"></script>
