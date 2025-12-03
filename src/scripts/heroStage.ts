@@ -8,8 +8,13 @@ if (typeof window !== "undefined") {
   const stageContainer = document.querySelector(".hero-stage") as HTMLElement | null;
   const stageInner = document.querySelector(".hero-stage__inner") as HTMLElement | null;
   const store = document.querySelector("#hero-store") as HTMLElement | null;
+  const storeBase = document.querySelector("#hero-store-base") as HTMLElement | null;
   const grass = document.querySelector("#hero-grass") as HTMLElement | null;
   const bg = document.querySelector("#hero-bg") as HTMLElement | null;
+  const bella = document.querySelector("#hero-bella") as HTMLElement | null;
+  const treeline = document.querySelector("#hero-treeline") as HTMLElement | null;
+  const watertower = document.querySelector("#hero-watertower") as HTMLElement | null;
+  const cloud = document.querySelector("#hero-cloud") as HTMLElement | null;
 
   const resizeStage = () => {
     if (!stageContainer || !stageInner) return;
@@ -39,24 +44,55 @@ if (typeof window !== "undefined") {
     resizeStage();
 
     // Set initial centering anchor for actors
-    gsap.set("#hero-store, #hero-grass", { xPercent: -50, yPercent: -50 });
+    gsap.set("#hero-store, #hero-store-base, #hero-grass, #hero-bella, #hero-treeline, #hero-watertower, #hero-cloud", { xPercent: -50, yPercent: -50 });
 
     const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-  if (store && grass) {
-    tl.to(store, {
+  if (store && storeBase && grass && bella && treeline && watertower && cloud) {
+    tl.to(cloud, {
+      opacity: 1,
+      duration: 2.5, // Slow fade
+    })
+    .to(watertower, {
+      opacity: 1,
+      y: "-=10", // Farthest object
+      duration: 1.5,
+    }, "<0.5")
+    .to(treeline, {
+      opacity: 1,
+      y: "-=20",
+      duration: 1.5,
+    }, "<")
+    .to(store, {
       opacity: 1,
       y: "-=50",
       duration: 1.5,
-    }).to(
-      grass,
-      {
-        opacity: 1,
-        y: "-=30",
-        duration: 1.5,
-      },
-      "-=1.2",
-    );
+    }, "<0.2") // Start slightly after treeline
+    .to(storeBase, {
+      opacity: 1,
+      y: "-=50",
+      duration: 1.5,
+    }, "<") // Sync with store
+    .to(bella, {
+      opacity: 1,
+      y: "-=40", // Move up 40px
+      duration: 1.5,
+    }, "-=1.3")
+    .to(grass, {
+      opacity: 1,
+      y: "-=30",
+      duration: 1.5,
+    }, "-=1.2");
+
+    // Cloud Drift Animation (Loop)
+    gsap.to(cloud, {
+      x: "+=300",          // move 300px to the right
+      y: "-=15",           // float up a bit
+      duration: 60,        // very slow
+      ease: "none",
+      repeat: -1,
+      yoyo: true
+    });
   }
 
   if (stageContainer) {
@@ -74,6 +110,25 @@ if (typeof window !== "undefined") {
         });
       }
 
+      if (storeBase) {
+        gsap.to(storeBase, {
+          x: -xNorm * 40,
+          y: -yNorm * 40 - 50,
+          duration: 1,
+          ease: "power2.out",
+          overwrite: "auto",
+        });
+      }
+
+      if (bella) {
+        gsap.to(bella, {
+          x: -xNorm * 60, // Mid-foreground movement
+          y: -yNorm * 35 - 40, // Include entrance offset
+          duration: 1,
+          ease: "power2.out",
+        });
+      }
+
       if (grass) {
         gsap.to(grass, {
           x: -xNorm * 100,
@@ -82,6 +137,26 @@ if (typeof window !== "undefined") {
           ease: "power2.out",
         });
       }
+
+      if (treeline) {
+        gsap.to(treeline, {
+          x: -xNorm * 15, // Distance movement
+          y: -yNorm * 15,
+          duration: 1,
+          ease: "power2.out",
+        });
+      }
+
+      if (watertower) {
+        gsap.to(watertower, {
+          x: -xNorm * 10, // Farthest movement
+          y: -yNorm * 10,
+          duration: 1,
+          ease: "power2.out",
+        });
+      }
+
+      // Cloud removed from parallax to allow drift
 
       if (bg) {
         gsap.to(bg, {

@@ -8,6 +8,25 @@
       <img src="/sd.png" alt="Watercolor Sky Background" />
     </div>
 
+    <!-- Layer 1.1: Cloud (Sky Object) -->
+    <div id="hero-cloud" class="hero-layer">
+      <img src="/cloudl3.png" alt="Cloud" />
+    </div>
+
+    <!-- Layer 1.2: Watertower (Far Distance) -->
+    <div id="hero-watertower" class="hero-layer">
+      <img src="/bobber3b.png" alt="Watertower" />
+    </div>
+
+    <!-- Layer 1.5: Treeline (Distance) -->
+    <div id="hero-treeline" class="hero-layer">
+      <img src="/treeline6.png" alt="Treeline" />
+      <img src="/treeline6.png" alt="Treeline" />
+      <img src="/treeline6.png" alt="Treeline" />
+      <img src="/treeline6.png" alt="Treeline" />
+      <img src="/treeline6.png" alt="Treeline" />
+    </div>
+
     <!-- Layer 2: Storefront -->
     <!-- Positioned at center-bottom of design space -->
     <!-- Design X: 960 (Center), Design Y: 700 (Approx bottom third) -->
@@ -15,7 +34,17 @@
       <img src="/bella-store-transparent.png" alt="Bella's Storefront" />
     </div>
 
-    <!-- Layer 3: Grass Foreground -->
+    <!-- Layer 2.5: Store Base (Foundation) -->
+    <div id="hero-store-base" class="hero-layer">
+      <img src="/store-base.png" alt="Store Base" />
+    </div>
+
+    <!-- Layer 3: Bella (Storekeeper) -->
+    <div id="hero-bella" class="hero-layer">
+      <img src="/bella-pose3.png" alt="Bella" />
+    </div>
+
+    <!-- Layer 4: Grass Foreground -->
     <!-- Overlapping bottom, slightly lower than store -->
     <!-- Design X: 960, Design Y: 950 -->
     <div id="hero-grass" class="hero-layer">
@@ -65,13 +94,61 @@
     object-fit: cover;
   }
 
+  /* Cloud: Sky anchor */
+  #hero-cloud {
+    left: 1400px;
+    top: 200px;
+    width: 300px; /* Shrunk by 25% */
+    z-index: 0;
+    opacity: 0;
+  }
+  #hero-cloud img {
+    width: 100%;
+    height: auto;
+    display: block;
+    opacity: 0.9;
+  }
+
+  /* Watertower: Far Distance anchor */
+  #hero-watertower {
+    left: 1600px;
+    top: 400px; /* Moved up to tuck bottom behind treeline */
+    width: 260px; /* Reduced by 35% */
+    z-index: 0; /* Behind treeline (1) but after bg (source order) */
+    opacity: 0;
+  }
+  #hero-watertower img {
+    width: 100%;
+    height: auto;
+    display: block;
+    opacity: 0.7; /* Atmospheric fade */
+  }
+
+  /* Treeline: Distance anchor */
+  #hero-treeline {
+    left: 960px;
+    top: 500px; /* Moved up higher to intersect store visually */
+    width: 4000px; /* Wider container */
+    z-index: 1;
+    opacity: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+  }
+  #hero-treeline img {
+    width: auto;
+    height: 150px; /* Fixed short height */
+    display: block;
+    opacity: 0.8;
+  }
+
   /* Store: Center anchor */
   #hero-store {
     left: 960px;
-    top: 700px;
-    width: 1000px; /* Fixed pixel width in design space */
+    top: 540px; /* Centered vertically */
+    width: 600px; /* Made smaller */
     /* transform: translate(-50%, -50%);  <-- Handled by GSAP xPercent/yPercent */
-    z-index: 1;
+    z-index: 2;
     opacity: 0; /* GSAP handles fade in */
   }
   #hero-store img {
@@ -81,13 +158,43 @@
     filter: drop-shadow(0 10px 20px rgba(60, 45, 30, 0.15));
   }
 
+  /* Store Base: Center anchor */
+  #hero-store-base {
+    left: 960px;
+    top: 740px; /* Moved up 40px to reduce gap/increase overlap */
+    width: 600px; /* Matches store width */
+    z-index: 2; /* In front of store */
+    opacity: 0;
+  }
+  #hero-store-base img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 10px 20px rgba(60, 45, 30, 0.15));
+  }
+
+  /* Bella: Center anchor */
+  #hero-bella {
+    left: 850px;
+    top: 800px;
+    width: 300px;
+    z-index: 3;
+    opacity: 0;
+  }
+  #hero-bella img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 5px 15px rgba(60, 45, 30, 0.2));
+  }
+
   /* Grass: Center anchor */
   #hero-grass {
     left: 960px;
-    top: 950px;
+    top: 1050px; /* Moved down 50px to maintain gap */
     width: 2200px; /* Wider to allow parallax movement */
     /* transform: translate(-50%, -50%); <-- Handled by GSAP */
-    z-index: 2;
+    z-index: 4; /* In front of Bella */
     opacity: 0; /* GSAP handles fade in */
   }
   #hero-grass img {
@@ -97,4 +204,6 @@
   }
 </style>
 
-<script src="../scripts/heroStage.ts"></script>
+<script>
+  import "../scripts/heroStage.ts";
+</script>
