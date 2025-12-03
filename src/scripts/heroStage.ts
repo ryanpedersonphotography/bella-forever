@@ -15,6 +15,7 @@ if (typeof window !== "undefined") {
   const treeline = document.querySelector("#hero-treeline") as HTMLElement | null;
   const watertower = document.querySelector("#hero-watertower") as HTMLElement | null;
   const cloud = document.querySelector("#hero-cloud") as HTMLElement | null;
+  const snow = document.querySelector("#hero-snow") as HTMLElement | null;
 
   const resizeStage = () => {
     if (!stageContainer || !stageInner) return;
@@ -48,11 +49,16 @@ if (typeof window !== "undefined") {
 
     const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-  if (store && storeBase && grass && bella && treeline && watertower && cloud) {
+  if (store && storeBase && grass && bella && treeline && watertower && cloud && snow) {
     tl.to(cloud, {
       opacity: 1,
       duration: 2.5, // Slow fade
     })
+    .to(snow, {
+      opacity: 1,
+      y: "-=20", // Ground plane
+      duration: 1.5,
+    }, "<")
     .to(watertower, {
       opacity: 1,
       y: "-=10", // Farthest object
@@ -156,7 +162,23 @@ if (typeof window !== "undefined") {
         });
       }
 
-      // Cloud removed from parallax to allow drift
+      if (cloud) {
+        gsap.to(cloud, {
+          x: -xNorm * 50, // Clouds move a bit
+          y: -yNorm * 10,
+          duration: 1.5, // Slower float
+          ease: "power2.out",
+        });
+      }
+
+      if (snow) {
+        gsap.to(snow, {
+          x: xNorm * 25, 
+          y: yNorm * 25,
+          duration: 1,
+          ease: "power2.out",
+        });
+      }
 
       if (bg) {
         gsap.to(bg, {

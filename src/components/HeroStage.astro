@@ -27,6 +27,11 @@
       <img src="/treeline6.png" alt="Treeline" />
     </div>
 
+    <!-- Layer 1.8: Snow Ground -->
+    <div id="hero-snow" class="hero-layer">
+      <img src="/snow-ground.svg" alt="Snow Ground" />
+    </div>
+
     <!-- Layer 2: Storefront -->
     <!-- Positioned at center-bottom of design space -->
     <!-- Design X: 960 (Center), Design Y: 700 (Approx bottom third) -->
@@ -140,6 +145,21 @@
     height: 150px; /* Fixed short height */
     display: block;
     opacity: 0.8;
+  }
+
+  /* Snow: Ground layer */
+  #hero-snow {
+    left: 0;
+    top: 600px;
+    width: 1920px;
+    height: 600px;
+    z-index: 1;
+    opacity: 0;
+  }
+  #hero-snow img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   /* Store: Center anchor */
