@@ -43,17 +43,17 @@
 
   const waves = [
     // 2 new back-most layers to reach treeline
-    { top: 575, height: 5, depth: 0.17 },
-    { top: 585, height: 10, depth: 0.18 },
+    { top: 580, height: 5, depth: 0.17 },
+    { top: 590, height: 10, depth: 0.18 },
     // Original 7 layers
-    { top: 595, height: 15, depth: 0.19 },
-    { top: 605, height: 25, depth: 0.20 },
-    { top: 620, height: 35, depth: 0.21 },
-    { top: 635, height: 45, depth: 0.22 },
-    { top: 655, height: 55, depth: 0.23 },
-    { top: 680, height: 65, depth: 0.24 },
+    { top: 600, height: 15, depth: 0.19 },
+    { top: 610, height: 25, depth: 0.20 },
+    { top: 625, height: 35, depth: 0.21 },
+    { top: 640, height: 45, depth: 0.22 },
+    { top: 660, height: 55, depth: 0.23 },
+    { top: 685, height: 65, depth: 0.24 },
     // Front-most wave (rendered last, top layer)
-    { top: 710, height: 75, depth: 0.25 },
+    { top: 715, height: 75, depth: 0.25 },
   ];
 
   onMount(() => {
@@ -154,7 +154,7 @@
                   background-size: auto 100%;
                   mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
                   -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
-                  filter: drop-shadow(0px 2px 5px rgba(0,0,0,0.2));">
+                  filter: drop-shadow(0px 0px 5px rgba(0,0,0,0.2));">
       </div>
       
       <!-- Awning/Sign (Implicitly part of store for now, but targeting class if we separate later) -->
