@@ -135,15 +135,15 @@
       <!-- Layer 1.85: Store Base Waves -->
                   {#each waves as wave, i}
                     <div class="store-base-wave hero-layer" data-parallax data-depth={wave.depth}
-                                                   style="left: 960px; top: {wave.top}px; width: 4000px; height: {wave.height}px;
-                                                          background-image: url('{theme.storeBase}');
-                                                          background-repeat: repeat-x;
-                                                          background-position: top center;
-                                                          background-size: auto 100%;
-                                                                                                  opacity: {0.2 + (i * 0.1)};
-                                                                                                  box-shadow: 0px 2px 5px rgba(0,0,0,0.2);">                    </div>
+             style="left: 960px; top: {wave.top}px; width: 4000px; height: {wave.height}px;
+                    background-image: url('{theme.storeBase}');
+                    background-repeat: repeat-x;
+                    background-position: top center;
+                    background-size: auto 100%;
+                    opacity: {0.2 + (i * 0.1)};
+                    filter: drop-shadow(0px 2px 5px rgba(0,0,0,0.2));">                    </div>
                   {/each}
-      <img class="shop hero-layer" data-parallax data-depth="0.4" src={theme.store} alt="Bella's Storefront" style="left: 960px; top: 585px; width: 600px;" />
+      <img class="shop hero-layer" data-parallax data-depth="0.4" src={theme.store} alt="Bella's Storefront" style="left: 960px; top: 585px; width: 600px; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5));" />
       
       <!-- Layer 1.9: Grass (Behind Store, In front of Trees) -->
       <div class="grass hero-layer" data-parallax data-depth="0.5"
@@ -154,7 +154,7 @@
                   background-size: auto 100%;
                   mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
                   -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
-                  box-shadow: 0px 4px 10px 2px rgba(0,0,0,0.3);">
+                  filter: drop-shadow(0px 2px 5px rgba(0,0,0,0.2));">
       </div>
       
       <!-- Awning/Sign (Implicitly part of store for now, but targeting class if we separate later) -->
