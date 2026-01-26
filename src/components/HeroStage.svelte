@@ -42,7 +42,10 @@
   const DESIGN_H = 1080;
 
   const waves = [
-    // Back-most wave (rendered first, bottom layer)
+    // 2 new back-most layers
+    { top: 595, height: 15, depth: 0.19 },
+    { top: 605, height: 25, depth: 0.20 },
+    // Original layers
     { top: 620, height: 35, depth: 0.21 },
     { top: 635, height: 45, depth: 0.22 },
     { top: 655, height: 55, depth: 0.23 },
@@ -128,16 +131,16 @@
       {/if}
 
       <!-- Layer 1.85: Store Base Waves -->
-      {#each waves as wave, i}
-        <div class="store-base-wave hero-layer" data-parallax data-depth={wave.depth}
-             style="left: 960px; top: {wave.top}px; width: 4000px; height: {wave.height}px;
-                    background-image: url('{theme.storeBase}');
-                    background-repeat: repeat-x;
-                    background-position: top center;
-                    background-size: auto 100%;"> 
-        </div>
-      {/each}
-
+                  {#each waves as wave, i}
+                    <div class="store-base-wave hero-layer" data-parallax data-depth={wave.depth}
+                                                   style="left: 960px; top: {wave.top}px; width: 4000px; height: {wave.height}px;
+                                                          background-image: url('{theme.storeBase}');
+                                                          background-repeat: repeat-x;
+                                                          background-position: top center;
+                                                          background-size: auto 100%;
+                                                                              opacity: {0.28 + (i * 0.12)};
+                                                                              box-shadow: 0px 2px 5px rgba(0,0,0,0.2);">                    </div>
+                  {/each}
       <!-- Layer 1.9: Grass (Behind Store, In front of Trees) -->
       <div class="grass hero-layer" data-parallax data-depth="0.3"
            style="left: 960px; top: 800px; width: 4000px; height: 300px;
