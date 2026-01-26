@@ -149,11 +149,9 @@
       <div class="grass hero-layer" data-parallax data-depth="0.5"
            style="left: 960px; top: 780px; width: 4000px; height: 150px;
                   background-image: url('{theme.grass}');
-                  background-repeat: repeat-x;
+                  background-repeat: no-repeat;
                   background-position: bottom center;
                   background-size: auto 100%;
-                  mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
-                  -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
                   filter: drop-shadow(0px 0px 5px rgba(0,0,0,0.2));">
       </div>
       
