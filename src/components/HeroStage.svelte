@@ -1,7 +1,6 @@
 <script>
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount } from 'svelte';
   import { gsap } from 'gsap';
-  import { initScrollEffects, killAllScrollTriggers } from '../lib/gsap/scroll';
   import Snow from './Snow.svelte';
 
   const THEMES = {
@@ -77,19 +76,9 @@
     window.addEventListener("resize", resizeStage);
     resizeStage();
 
-    // 2. Initialize Scroll Effects
-    const t = setTimeout(() => {
-      if (rootEl) initScrollEffects(rootEl);
-    }, 50);
-
     return () => {
       window.removeEventListener("resize", resizeStage);
-      clearTimeout(t);
     };
-  });
-
-  onDestroy(() => {
-    killAllScrollTriggers();
   });
 </script>
 
@@ -132,6 +121,8 @@
         <img class="hero-layer" data-parallax data-depth="0.25" src={theme.ground} alt="Ground" style="left: 0; top: 600px; width: 1920px; height: 600px; object-fit: cover;" />
       {/if}
 
+
+
       <!-- Layer 1.85: Store Base Waves -->
                   {#each waves as wave, i}
                     <div class="store-base-wave hero-layer" data-parallax data-depth={wave.depth}
@@ -159,7 +150,7 @@
       
             <!-- Bella -->
       
-            <img class="bella hero-layer" data-parallax data-depth="0.6" src={theme.bella} alt="Bella" style="left: 375px; top: 800px; width: 300px; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5));" />
+            <img class="bella hero-layer" data-parallax data-depth="0.6" src={theme.bella} alt="Bella" style="left: 375px; top: 759px; width: 270px; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5));" />
       
       
       
