@@ -147,7 +147,7 @@
       
       <!-- Layer 1.9: Grass (Behind Store, In front of Trees) -->
       <div class="grass hero-layer" data-parallax data-depth="0.5"
-           style="left: 960px; top: 780px; width: 4000px; height: 150px;
+           style="left: 960px; top: 810px; width: 4000px; height: 180px;
                   background-image: url('{theme.grass}');
                   background-repeat: no-repeat;
                   background-position: bottom center;
@@ -159,7 +159,7 @@
       
             <!-- Bella -->
       
-            <img class="bella hero-layer" data-parallax data-depth="0.6" src={theme.bella} alt="Bella" style="left: 850px; top: 800px; width: 300px;" />
+            <img class="bella hero-layer" data-parallax data-depth="0.6" src={theme.bella} alt="Bella" style="left: 375px; top: 800px; width: 300px; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5));" />
       
       
       
