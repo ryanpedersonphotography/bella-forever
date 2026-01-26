@@ -143,19 +143,19 @@
                                                                                                   opacity: {0.2 + (i * 0.1)};
                                                                                                   box-shadow: 0px 2px 5px rgba(0,0,0,0.2);">                    </div>
                   {/each}
+      <img class="shop hero-layer" data-parallax data-depth="0.4" src={theme.store} alt="Bella's Storefront" style="left: 960px; top: 585px; width: 600px;" />
+      
       <!-- Layer 1.9: Grass (Behind Store, In front of Trees) -->
-      <div class="grass hero-layer" data-parallax data-depth="0.3"
-           style="left: 960px; top: 800px; width: 4000px; height: 300px;
+      <div class="grass hero-layer" data-parallax data-depth="0.5"
+           style="left: 960px; top: 780px; width: 4000px; height: 150px;
                   background-image: url('{theme.grass}');
                   background-repeat: repeat-x;
                   background-position: bottom center;
                   background-size: auto 100%;
                   mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
-                  -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);">
+                  -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+                  box-shadow: 0px 4px 10px 2px rgba(0,0,0,0.3);">
       </div>
-
-      <!-- Shop Group -->
-      <img class="shop hero-layer" data-parallax data-depth="0.4" src={theme.store} alt="Bella's Storefront" style="left: 960px; top: 572px; width: 600px;" />
       
       <!-- Awning/Sign (Implicitly part of store for now, but targeting class if we separate later) -->
       
