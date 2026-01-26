@@ -42,10 +42,12 @@
   const DESIGN_H = 1080;
 
   const waves = [
-    // 2 new back-most layers
+    // 2 new back-most layers to reach treeline
+    { top: 575, height: 5, depth: 0.17 },
+    { top: 585, height: 10, depth: 0.18 },
+    // Original 7 layers
     { top: 595, height: 15, depth: 0.19 },
     { top: 605, height: 25, depth: 0.20 },
-    // Original layers
     { top: 620, height: 35, depth: 0.21 },
     { top: 635, height: 45, depth: 0.22 },
     { top: 655, height: 55, depth: 0.23 },
@@ -138,8 +140,8 @@
                                                           background-repeat: repeat-x;
                                                           background-position: top center;
                                                           background-size: auto 100%;
-                                                                              opacity: {0.28 + (i * 0.12)};
-                                                                              box-shadow: 0px 2px 5px rgba(0,0,0,0.2);">                    </div>
+                                                                                                  opacity: {0.2 + (i * 0.1)};
+                                                                                                  box-shadow: 0px 2px 5px rgba(0,0,0,0.2);">                    </div>
                   {/each}
       <!-- Layer 1.9: Grass (Behind Store, In front of Trees) -->
       <div class="grass hero-layer" data-parallax data-depth="0.3"
@@ -147,7 +149,9 @@
                   background-image: url('{theme.grass}');
                   background-repeat: repeat-x;
                   background-position: bottom center;
-                  background-size: auto 100%;">
+                  background-size: auto 100%;
+                  mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+                  -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);">
       </div>
 
       <!-- Shop Group -->
