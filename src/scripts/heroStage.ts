@@ -5,23 +5,14 @@ const DESIGN_H = 1080;
 
 // Only run on client
 if (typeof window !== "undefined") {
-  const stageContainer = document.querySelector(".hero-stage") as HTMLElement | null;
-  const stageInner = document.querySelector(".hero-stage__inner") as HTMLElement | null;
-  const store = document.querySelector("#hero-store") as HTMLElement | null;
-  const storeBase = document.querySelector("#hero-store-base") as HTMLElement | null;
-  const grass = document.querySelector("#hero-grass") as HTMLElement | null;
-  const bg = document.querySelector("#hero-bg") as HTMLElement | null;
-  const bella = document.querySelector("#hero-bella") as HTMLElement | null;
-  const treeline = document.querySelector("#hero-treeline") as HTMLElement | null;
-  const watertower = document.querySelector("#hero-watertower") as HTMLElement | null;
-  const cloud = document.querySelector("#hero-cloud") as HTMLElement | null;
-  const snow = document.querySelector("#hero-snow") as HTMLElement | null;
+  const viewport = document.querySelector(".viewport") as HTMLElement | null; // Changed from .hero-stage
+  const stageInners = document.querySelectorAll(".hero-stage__inner"); // Changed to querySelectorAll
 
   const resizeStage = () => {
-    if (!stageContainer || !stageInner) return;
+    if (!viewport || stageInners.length === 0) return;
 
-    const vw = stageContainer.clientWidth;
-    const vh = stageContainer.clientHeight;
+    const vw = viewport.clientWidth;
+    const vh = viewport.clientHeight;
 
     // "Cover" behavior: Fill the viewport
     const scale = Math.max(vw / DESIGN_W, vh / DESIGN_H);
@@ -30,12 +21,14 @@ if (typeof window !== "undefined") {
     const xOffset = (vw - DESIGN_W * scale) / 2;
     const yOffset = (vh - DESIGN_H * scale) / 2;
 
-    gsap.set(stageInner, {
-      scale,
-      x: xOffset,
-      y: yOffset,
-      force3D: true,
-      transformOrigin: "top left",
+    stageInners.forEach(stageInner => { // Iterate and apply to all
+      gsap.set(stageInner, {
+        scale,
+        x: xOffset,
+        y: yOffset,
+        force3D: true,
+        transformOrigin: "top left",
+      });
     });
   };
 

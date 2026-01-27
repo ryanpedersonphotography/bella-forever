@@ -37,6 +37,7 @@ const waves = [
 ---
 
 <div class="viewport">
+  <!-- MOVING WORLD (scenes only) -->
   <div id="world" class="world">
     <!-- ============================================= -->
     <!-- SCENE 1: HOME                                 -->
@@ -44,16 +45,7 @@ const waves = [
     <section id="home" class="scene">
       <div class="hero-stage__inner">
         <img id="sky-bg" class="hero-layer" src={theme.bg} alt="Watercolor Sky Background" style="left: 0; top: 0; width: 1920px; height: 1080px; transform: none; z-index: 0;" />
-        <nav class="navBar">
-          {navButtons.map(button => (
-            <a href={button.href}>
-            <button class="navBtn" type="button" style={`background-image: url('${button.image}')`}>
-                <span>{button.label}</span>
-                <i class="grain"></i>
-            </button>
-            </a>
-          ))}
-        </nav>
+        
         <img class="cloud hero-layer" src={theme.cloud} alt="Cloud" style="left: 1400px; top: 200px; width: 300px; z-index: 0;" />
         <img class="waterTower hero-layer" src={theme.watertower} alt="Watertower" style="left: 1600px; top: 400px; width: 260px; z-index: 0;" />
         <div class="treesFar hero-layer" style={`left: 960px; top: 500px; width: 4000px; height: 150px; background-image: url('${theme.treeline}'); background-repeat: repeat-x; background-position: bottom center; background-size: auto 100%;`}></div>
@@ -62,7 +54,6 @@ const waves = [
         ))}
         <img class="shop hero-layer" src={theme.store} alt="Bella's Storefront" style="left: 960px; top: 585px; width: 600px; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5));" />
         <div class="grass hero-layer" style={`left: 960px; top: 870px; width: 8000px; height: 360px; background-image: url('${theme.grass}'); background-repeat: no-repeat; background-position: bottom center; background-size: auto 100%;`}></div>
-        <img class="bella hero-layer" id="bella-img" src={theme.bella} alt="Bella" style="left: 375px; top: 759px; width: 270px; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5)); z-index: 50;" />
       </div>
     </section>
 
@@ -72,17 +63,6 @@ const waves = [
     <section id="about" class="scene">
         <div class="hero-stage__inner">
             <img class="hero-layer" src={theme.bg} alt="Watercolor Sky Background" style="left: 0; top: 0; width: 1920px; height: 1080px; transform: none; z-index: 0;" />
-             <nav class="navBar">
-                {navButtons.map(button => (
-                    <a href={button.href}>
-                    <button class="navBtn" type="button" style={`background-image: url('${button.image}')`}>
-                        <span>{button.label}</span>
-                        <i class="grain"></i>
-                    </button>
-                    </a>
-                ))}
-            </nav>
-            <img class="bella hero-layer" src={theme.bella} alt="Bella" style="left: 375px; top: 759px; width: 270px; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5)); z-index: 50;" />
             
             <div class="about-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #3c2e2a; z-index: 10;">
                 <h1 style="font-family: 'Palatino Linotype', Palatino, serif; font-size: 64px;">About Bella's Dresser</h1>
@@ -117,7 +97,27 @@ const waves = [
         <h1>Contact (Placeholder)</h1>
       </div>
     </section>
+  </div>
 
+  <!-- PERSISTENT OVERLAY (does NOT move) -->
+  <div class="overlay">
+    <nav class="navBar">
+      {navButtons.map(button => (
+        <a href={button.href}>
+        <button class="navBtn" type="button" style={`background-image: url('${button.image}')`}>
+            <span>{button.label}</span>
+            <i class="grain"></i>
+        </button>
+        </a>
+      ))}
+    </nav>
+
+    <img class="bella" src={theme.bella} alt="Bella" />
+  </div>
+
+  <!-- OPTIONAL FOREGROUND OVERLAY (does NOT move) -->
+  <div class="foreground">
+    <!-- <img src="/img/foreground-grass.png" alt="" /> -->
   </div>
 </div>
 
@@ -132,9 +132,12 @@ const waves = [
   left: 0;
 }
 .world { 
+  position: absolute;
+  inset: 0;
   width: 100vw; 
   height: 500vh; /* 5 scenes * 100vh */
-  will-change: transform; 
+  will-change: transform;
+  z-index: 1;
 }
 .scene { 
   width: 100vw; 
@@ -160,6 +163,27 @@ const waves = [
   transform: translate(-50%, -50%); /* Center anchor default */
 }
 
+/* stays put while world pans */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none; /* allow world clicks unless you need them */
+}
+
+.foreground {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 34vh;        /* tune */
+  z-index: 20;
+  pointer-events: none;
+}
+
+.foreground img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
 /* --- Button Styles --- */
 :root {
@@ -169,12 +193,13 @@ const waves = [
   .navBar{
     position:absolute;
     top:42px;
-    left:50%;
-    transform:translateX(-50%);
+    left:0;
+    width:100%;
     display:flex;
-    gap:44px; /* Restored original gap */
+    justify-content:space-evenly;
     align-items:center;
     z-index: 100; /* Keep nav on top */
+    pointer-events: auto; /* re-enable clicks for nav */
   }
 
   .navBtn{
@@ -244,4 +269,20 @@ const waves = [
         radial-gradient(16px 12px at 40% 75%, rgba(255,255,255,.45), transparent 60%);
     mix-blend-mode: multiply;
 }
+
+.bella {
+  position: absolute;
+  left: 19.53vw;
+  top: 70.27vh;
+  width: 14.06vw;
+  height: auto;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 11;
+  filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5));
+}
 </style>
+
+<script>
+  import "../scripts/heroStage.ts";
+</script>
