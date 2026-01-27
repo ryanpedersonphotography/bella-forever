@@ -261,8 +261,10 @@ import { aboutSections } from "../scripts/stage-config";
     left:0;
     width:100%;
     display:flex;
-    justify-content:space-evenly;
+    justify-content: center;
     align-items:center;
+    flex-wrap: wrap;
+    gap: 1rem;
     z-index: 100; /* Keep nav on top */
     pointer-events: auto; /* re-enable clicks for nav */
   }
@@ -287,6 +289,18 @@ import { aboutSections } from "../scripts/stage-config";
     drop-shadow(0 26px 40px rgba(25,45,50,.14));
   z-index: 100;
 }
+
+@media (max-width: 1200px) {
+  .navBtn {
+    min-width: auto;
+    padding: 0 24px;
+    height: 72px;
+  }
+  .navBtn span {
+    font-size: 32px;
+  }
+}
+
 
 .navBtn::before {
   content: "";
