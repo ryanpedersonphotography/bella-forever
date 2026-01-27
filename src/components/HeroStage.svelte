@@ -56,11 +56,11 @@
   ];
 
   const navButtons = [
-    { label: 'Home',    href: '#home',    variant: 'navBtn--tan'   },
-    { label: 'About',   href: '#about',   variant: 'navBtn--teal'  },
-    { label: 'Shop',    href: '#shop',    variant: 'navBtn--coral' },
-    { label: 'Gallery', href: '#gallery', variant: 'navBtn--cream' },
-    { label: 'Contact', href: '#contact', variant: 'navBtn--green' },
+    { label: 'Home',    href: '#home',    image: '/button1.png' },
+    { label: 'About',   href: '#about',   image: '/button2.png' },
+    { label: 'Shop',    href: '#shop',    image: '/button3.png' },
+    { label: 'Gallery', href: '#gallery', image: '/button4.png' },
+    { label: 'Contact', href: '#contact', image: '/button5.png' },
   ];
 
   onMount(() => {
@@ -113,13 +113,11 @@
 
       <!-- Navigation Bar (New) -->
       <nav class="navBar">
-        {#each navButtons as button, i}
+        {#each navButtons as button}
           <a href={button.href}>
-            <button class="navBtn {button.variant}" type="button">
+            <button class="navBtn" type="button"
+                    style="background-image: url('{button.image}');">
               <span>{button.label}</span>
-              {#if button.variant === 'navBtn--cream'}
-                <i class="stitch"></i>
-              {/if}
               <i class="grain"></i>
             </button>
           </a>
@@ -287,56 +285,43 @@
     --paper:#f6f1e6;
   }
 
+  /* NAV LAYOUT */
+  .navBar{
+    position:absolute;
+    top:42px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    gap:100px; /* Increased gap for better distribution */
+    align-items:center;
+  }
+
   .navBtn{
     height:92px;
     padding: 0 54px;
     min-width: 220px;
-    border-radius: 14px;
+    border-radius: 14px; /* NOT a pill; this is key */
     border: 1px solid rgba(60,46,42,.22);
-    background: var(--bg, #caa37d);
     position: relative;
     cursor: pointer;
     display:inline-flex;
     align-items:center;
     justify-content:center;
     background-size: 100% 100%;
-    background-repeat:no-repeat;
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,.35),
-      inset 0 -14px 20px rgba(0,0,0,.12);
-    transition: transform .1s ease;
-  }
-
-  .navBtn::before{
-    content:"";
-    position:absolute;
-    inset: 8px;
-    border-radius: inherit;
-    background: rgba(10, 24, 28, .42);
-    filter: blur(22px);
-    transform: translateY(20px);
-    opacity: .32;
-    z-index:-1;
-    pointer-events:none;
-  }
-
-  .navBtn::after{
-    content:"";
-    position:absolute;
-    left: 14px;
-    right:14px;
-    bottom:-10px;
-    height: 18px;
-    border-radius: 999px;
-    background: rgba(10,24,28,.40);
-    filter: blur(10px);
-    opacity: .22;
-    z-index:-1;
-    pointer-events:none;
-  }
-
-  .navBtn span{
-    font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+      background-repeat:no-repeat;
+      transition: transform .1s ease;
+      will-change: transform; /* Add hint for browser animation */
+    
+      /* New pixel-based shadow that respects PNG transparency */      filter:
+        drop-shadow(0 10px 14px rgba(25,45,50,.18))
+        drop-shadow(0 26px 40px rgba(25,45,50,.14));
+    }
+    
+    .navBtn:focus {
+      outline: none;
+    }
+    
+    .navBtn span{    font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
     font-weight: 700;
     font-size: 44px;
     line-height: 1;
@@ -350,46 +335,6 @@
     filter: blur(.12px) contrast(1.06);
     position: relative;
     z-index: 1;
-  }
-
-  /* VARIANTS */
-  .navBtn--tan    { --bg: #b88960; --text:#f4ead8; }
-  .navBtn--teal   { --bg: #2f7c86; --text:#f4ead8; }
-  .navBtn--coral  { --bg: #d76f55; --text:#f4ead8; }
-  .navBtn--green  { --bg: #5b6f4e; --text:#f4ead8; }
-  .navBtn--cream{
-    --bg:#e6d9b9;
-    --text:#6b5a3d;
-    border-color: rgba(60,46,42,.18);
-  }
-  .navBtn--cream span{
-    -webkit-text-stroke: 1px rgba(255,255,255,.25);
-    text-shadow:
-      0 -1px 0 rgba(255,255,255,.55),
-      0  1px 0 rgba(60,40,25,.18),
-      0  9px 14px rgba(0,0,0,.18);
-  }
-  .navBtn--cream .stitch{
-    position:absolute;
-    inset:10px;
-    border-radius: 10px;
-    outline: 2px dotted rgba(90,60,35,.55);
-    outline-offset: -2px;
-    pointer-events:none;
-    opacity:.85;
-  }
-
-  .navBtn .grain{
-    position:absolute;
-    inset:0;
-    border-radius: inherit;
-    pointer-events:none;
-    opacity:.12;
-    background:
-      radial-gradient(14px 10px at 20% 30%, rgba(255,255,255,.55), transparent 60%),
-      radial-gradient(18px 14px at 70% 40%, rgba(0,0,0,.10), transparent 65%),
-      radial-gradient(16px 12px at 40% 75%, rgba(255,255,255,.45), transparent 60%);
-    mix-blend-mode: multiply;
   }
 
   /* HOVER/ACTIVE */
