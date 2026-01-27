@@ -188,7 +188,7 @@
       
       <!-- Layer 1.9: Grass -->
       <div class="grass hero-layer" data-parallax data-depth="0.5"
-           style="left: 960px; top: 910px; width: 8000px; height: 360px;
+           style="left: 960px; top: 870px; width: 8000px; height: 360px;
                   background-image: url('{theme.grass}');
                   background-repeat: no-repeat;
                   background-position: bottom center;
