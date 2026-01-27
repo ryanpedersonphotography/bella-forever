@@ -19,11 +19,11 @@ const theme = THEMES.summer;
 
 // Data for Navigation Buttons
 const navButtons = [
-  { label: 'Home',    href: '/',         scene: 'home' },
-  { label: 'About',   href: '/about',    scene: 'about' },
-  { label: 'Shop',    href: '/shop',     scene: 'shop' },
-  { label: 'Gallery', href: '/gallery',  scene: 'gallery' },
-  { label: 'Contact', href: '/contact',  scene: 'contact' },
+  { label: 'Home',    href: '/',         scene: 'home',    image: '/button1.png' },
+  { label: 'About',   href: '/about',    scene: 'about',   image: '/button2.png' },
+  { label: 'Shop',    href: '/shop',     scene: 'shop',    image: '/button3.png' },
+  { label: 'Gallery', href: '/gallery',  scene: 'gallery', image: '/button4.png' },
+  { label: 'Contact', href: '/contact',  scene: 'contact', image: '/button5.png' },
 ];
 
 // Data for store-base waves
@@ -47,10 +47,10 @@ const waves = [
         <nav class="navBar">
           {navButtons.map(button => (
             <a href={button.href}>
-              <button class="navBtn" type="button" style={`background-image: url('${button.image}')`}>
+            <button class="navBtn" type="button" style={`background-image: url('${button.image}')`}>
                 <span>{button.label}</span>
                 <i class="grain"></i>
-              </button>
+            </button>
             </a>
           ))}
         </nav>
@@ -166,17 +166,18 @@ const waves = [
   --ink:#3c2e2a;
   --paper:#f6f1e6;
 }
-.navBar{
-  position:absolute;
-  top:42px;
-  left:50%;
-  transform:translateX(-50%);
-  display:flex;
-  gap:100px;
-  align-items:center;
-  z-index: 100; /* Keep nav on top */
-}
-.navBtn{
+  .navBar{
+    position:absolute;
+    top:42px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    gap:44px; /* Restored original gap */
+    align-items:center;
+    z-index: 100; /* Keep nav on top */
+  }
+
+  .navBtn{
   height:92px;
   padding: 0 54px;
   min-width: 220px;
