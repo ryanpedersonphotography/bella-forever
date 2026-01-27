@@ -14,7 +14,7 @@
       store: "/bella-store-transparent.png",
       storeBase: "/store-base.png",
       bella: "/bella-pose3.png",
-      grass: "/grass-foreground.png"
+      grass: "/fg5.png"
     },
     winter: {
       showSnowfall: true,
@@ -56,11 +56,11 @@
   ];
 
   const navButtons = [
-    { label: 'Home',    href: '#home',    image: '/button1.png' },
-    { label: 'About',   href: '#about',   image: '/button2.png', id: 'about-btn' },
-    { label: 'Shop',    href: '#shop',    image: '/button3.png' },
-    { label: 'Gallery', href: '#gallery', image: '/button4.png' },
-    { label: 'Contact', href: '#contact', image: '/button5.png' },
+    { label: 'Home',    href: '/',         image: '/button1.png' },
+    { label: 'About',   href: '/about',    image: '/button2.png', id: 'about-btn' },
+    { label: 'Shop',    href: '#shop',     image: '/button3.png' },
+    { label: 'Gallery', href: '#gallery',  image: '/button4.png' },
+    { label: 'Contact', href: '#contact',  image: '/button5.png' },
   ];
 
   let snowCanvas; // Reference to the snow canvas
@@ -69,24 +69,26 @@
     event.preventDefault(); // Prevent default link behavior
     const stageInnerEl = stageInner; // Reference to the main content container
     const bellaImgEl = document.getElementById('bella-img'); // Reference to Bella's image
+    const snowCanvasEl = document.getElementById('snow-canvas');
 
     if (!stageInnerEl || !bellaImgEl) return;
 
+    const tl = gsap.timeline({
+      onComplete: () => {
+        window.location.href = '/about'; // Navigate after animation
+      }
+    });
+
     // Animate stageInner (all content except Bella) to slide left
-    gsap.to(stageInnerEl, { x: "-100vw", duration: 1, ease: "power2.inOut" });
+    tl.to(stageInnerEl, { x: "-100vw", duration: 1, ease: "power2.inOut" }, 0);
 
     // Animate Snow canvas (if visible)
-    if (theme.showSnowfall && snowCanvas) {
-      gsap.to(snowCanvas, { x: "-100vw", duration: 1, ease: "power2.inOut" });
+    if (theme.showSnowfall && snowCanvasEl) {
+      tl.to(snowCanvasEl, { x: "-100vw", duration: 1, ease: "power2.inOut" }, 0);
     }
 
     // Counter-animate Bella to make her appear stationary
-    gsap.to(bellaImgEl, { x: "+100vw", duration: 1, ease: "power2.inOut" });
-
-    // In a real app, you would navigate to /about after the animation completes
-    // setTimeout(() => {
-    //   window.location.href = '/about';
-    // }, 1000); // Match duration
+    tl.to(bellaImgEl, { x: "+=100vw", duration: 1, ease: "power2.inOut" }, 0);
   }
 
   onMount(() => {
@@ -168,48 +170,38 @@
         <img class="hero-layer" data-parallax data-depth="0.25" src={theme.ground} alt="Ground" style="left: 0; top: 600px; width: 1920px; height: 600px; object-fit: cover;" />
       {/if}
 
-
-
       <!-- Layer 1.85: Store Base Waves -->
-                  {#each waves as wave, i}
-                    <div class="store-base-wave hero-layer" data-parallax data-depth={wave.depth}
+      {#each waves as wave, i}
+        <div class="store-base-wave hero-layer" data-parallax data-depth={wave.depth}
              style="left: 960px; top: {wave.top}px; width: 4000px; height: {wave.height}px;
                     background-image: url('{theme.storeBase}');
                     background-repeat: repeat-x;
                     background-position: top center;
                     background-size: auto 100%;
                     opacity: {0.2 + (i * 0.1)};
-                    filter: drop-shadow(0px 2px 5px rgba(0,0,0,0.2));">                    </div>
-                  {/each}
+                    filter: drop-shadow(0px 2px 5px rgba(0,0,0,0.2));">
+        </div>
+      {/each}
+
+      <!-- Shop Group -->
       <img class="shop hero-layer" data-parallax data-depth="0.4" src={theme.store} alt="Bella's Storefront" style="left: 960px; top: 585px; width: 600px; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5));" />
       
-      <!-- Layer 1.9: Grass (Behind Store, In front of Trees) -->
+      <!-- Layer 1.9: Grass -->
       <div class="grass hero-layer" data-parallax data-depth="0.5"
-           style="left: 960px; top: 810px; width: 4000px; height: 180px;
+           style="left: 960px; top: 910px; width: 8000px; height: 360px;
                   background-image: url('{theme.grass}');
                   background-repeat: no-repeat;
                   background-position: bottom center;
-                  background-size: auto 100%;
-                  filter: drop-shadow(0px 0px 5px rgba(0,0,0,0.2));">
+                  background-size: auto 100%;">
       </div>
       
       <!-- Awning/Sign (Implicitly part of store for now, but targeting class if we separate later) -->
       
-            <!-- Bella -->
+      <!-- Bella -->
+      <img class="bella hero-layer" id="bella-img" data-parallax data-depth="0.6" src={theme.bella} alt="Bella" style="left: 375px; top: 759px; width: 270px; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5));" />
       
-                  <img class="bella hero-layer" id="bella-img" data-parallax data-depth="0.6" src={theme.bella} alt="Bella" style="left: 375px; top: 759px; width: 270px; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5));" />
-      
-                  
-      
-                            </div>
-      
-                  
-      
-                  
-      
-                  
-      
-                          </section>
+    </div>
+  </section>
 </div>
 
 <style>
