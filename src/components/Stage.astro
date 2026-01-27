@@ -34,17 +34,24 @@ const waves = [
   { top: 660, height: 55, depth: 0.23 }, { top: 685, height: 65, depth: 0.24 },
   { top: 715, height: 75, depth: 0.25 },
 ];
+
+const SCENE_COUNT = 5;
 ---
 
 <div class="viewport">
+  <!-- STATIONARY BACKGROUND -->
+  <div class="background">
+    <img class="bg-image" src={theme.bg} alt="Watercolor Sky Background" />
+  </div>
+
   <!-- MOVING WORLD (scenes only) -->
-  <div id="world" class="world">
+  <div id="world" class="world" style={`height:${SCENE_COUNT * 100}vh`}>
     <!-- ============================================= -->
     <!-- SCENE 1: HOME                                 -->
     <!-- ============================================= -->
     <section id="home" class="scene">
       <div class="hero-stage__inner">
-        <img id="sky-bg" class="hero-layer" src={theme.bg} alt="Watercolor Sky Background" style="left: 0; top: 0; width: 1920px; height: 1080px; transform: none; z-index: 0;" />
+        <!-- Background image removed from here -->
         
         <img class="cloud hero-layer" src={theme.cloud} alt="Cloud" style="left: 1400px; top: 200px; width: 300px; z-index: 0;" />
         <img class="waterTower hero-layer" src={theme.watertower} alt="Watertower" style="left: 1600px; top: 400px; width: 260px; z-index: 0;" />
@@ -61,13 +68,27 @@ const waves = [
     <!-- SCENE 2: ABOUT                                -->
     <!-- ============================================= -->
     <section id="about" class="scene">
-        <div class="hero-stage__inner">
-            <img class="hero-layer" src={theme.bg} alt="Watercolor Sky Background" style="left: 0; top: 0; width: 1920px; height: 1080px; transform: none; z-index: 0;" />
-            
-            <div class="about-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #3c2e2a; z-index: 10;">
-                <h1 style="font-family: 'Palatino Linotype', Palatino, serif; font-size: 64px;">About Bella's Dresser</h1>
-                <p style="font-family: 'Nunito', sans-serif; font-size: 24px; max-width: 600px; margin-top: 1rem;">A tiny fairytale boutique where little-daydream dresses come to life. Step into our watercolor world.</p>
-            </div>
+        <!-- Horizontal sections -->
+        <div id="story" class="aboutSection">
+          <div class="about-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #3c2e2a; z-index: 10;">
+              <h1 style="font-family: 'Palatino Linotype', Palatino, serif; font-size: 64px;">Our Story</h1>
+              <p style="font-family: 'Nunito', sans-serif; font-size: 24px; max-width: 600px; margin-top: 1rem;">A tiny fairytale boutique where little-daydream dresses come to life. Step into our watercolor world.</p>
+          </div>
+        </div>
+        <div id="location" class="aboutSection" style="background-color: #fdf6e3;">
+          <div class="about-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #3c2e2a; z-index: 10;">
+              <h1 style="font-family: 'Palatino Linotype', Palatino, serif; font-size: 64px;">Location</h1>
+          </div>
+        </div>
+        <div id="team" class="aboutSection" style="background-color: #e3fdf6;">
+          <div class="about-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #3c2e2a; z-index: 10;">
+              <h1 style="font-family: 'Palatino Linotype', Palatino, serif; font-size: 64px;">Team</h1>
+          </div>
+        </div>
+        <div id="faq" class="aboutSection" style="background-color: #f6e3fd;">
+          <div class="about-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #3c2e2a; z-index: 10;">
+              <h1 style="font-family: 'Palatino Linotype', Palatino, serif; font-size: 64px;">FAQ</h1>
+          </div>
         </div>
     </section>
 
@@ -81,11 +102,11 @@ const waves = [
     </section>
 
     <!-- ============================================= -->
-    <!-- SCENE 4: LOOKBOOK (Placeholder)               -->
+    <!-- SCENE 4: GALLERY (Placeholder)                -->
     <!-- ============================================= -->
-    <section id="lookbook" class="scene">
+    <section id="gallery" class="scene">
        <div style="display: grid; place-items: center; height: 100%; color: #3c2e2a;">
-        <h1>Lookbook (Placeholder)</h1>
+        <h1>Gallery (Placeholder)</h1>
       </div>
     </section>
 
@@ -103,16 +124,22 @@ const waves = [
   <div class="overlay">
     <nav class="navBar">
       {navButtons.map(button => (
-        <a href={button.href}>
-        <button class="navBtn" type="button" style={`background-image: url('${button.image}')`}>
+        <a class="navBtn" href={button.href} style={`background-image: url('${button.image}')`}>
             <span>{button.label}</span>
             <i class="grain"></i>
-        </button>
         </a>
       ))}
     </nav>
 
     <img class="bella" src={theme.bella} alt="Bella" />
+    
+    <!-- Side Navigation for 'About' sections -->
+    <aside class="sideNav" aria-label="About sections">
+      <a href="/about#story">Story</a>
+      <a href="/about#location">Location</a>
+      <a href="/about#team">Team</a>
+      <a href="/about#faq">FAQ</a>
+    </aside>
   </div>
 
   <!-- OPTIONAL FOREGROUND OVERLAY (does NOT move) -->
@@ -131,11 +158,22 @@ const waves = [
   top: 0;
   left: 0;
 }
+.background {
+  position: absolute;
+  inset: 0;
+  z-index: 0; /* Behind the world */
+}
+
+.bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .world { 
   position: absolute;
   inset: 0;
   width: 100vw; 
-  height: 500vh; /* 5 scenes * 100vh */
   will-change: transform;
   z-index: 1;
 }
@@ -144,7 +182,7 @@ const waves = [
   height: 100vh; 
   position: relative;
   overflow: hidden;
-  background-color: #f8f6f1;
+  background-color: transparent; /* Changed to transparent */
 }
 .hero-stage__inner {
   position: absolute;
@@ -171,6 +209,18 @@ const waves = [
   pointer-events: none; /* allow world clicks unless you need them */
 }
 
+#about.scene{
+  display:flex;        /* horizontal sections */
+  width: 400vw;        /* 4 sections */
+  height:100vh;
+}
+
+#about .aboutSection{
+  width:100vw;
+  height:100vh;
+  flex: 0 0 100vw;
+}
+
 .foreground {
   position: absolute;
   inset: auto 0 0 0;
@@ -184,6 +234,13 @@ const waves = [
   height: 100%;
   object-fit: cover;
 }
+
+.sideNav{ position:absolute; left:28px; top:170px; z-index:120; display:flex; flex-direction:column; gap:14px;
+          opacity:0; transform:translateY(-4px); transition:opacity .2s ease, transform .2s ease; pointer-events: none; }
+.sideNav.is-active{ opacity:1; transform:translateY(0); pointer-events: auto; }
+.sideNav a{ text-decoration:none; font-family:"Nunito",system-ui,sans-serif; font-weight:800; color:#3c2e2a;
+           background:rgba(255,255,255,.55); border:1px solid rgba(60,46,42,.18); border-radius:12px;
+           padding:10px 14px; backdrop-filter:blur(6px); }
 
 /* --- Button Styles --- */
 :root {
@@ -282,7 +339,3 @@ const waves = [
   filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5));
 }
 </style>
-
-<script>
-  import "../scripts/heroStage.ts";
-</script>

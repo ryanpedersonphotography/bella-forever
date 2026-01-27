@@ -1,5 +1,6 @@
 ---
 import Stage from "../components/Stage.astro";
+
 ---
 
 <html>
@@ -20,6 +21,7 @@ import Stage from "../components/Stage.astro";
       <slot />
     </main>
 
-    <script is:inline type="module" src="/src/scripts/stage-router.ts"></script>
+    <!-- ✅ Bundles in dev + prod -->
+    <script type="module">import "../scripts/stage-router.ts";</script>
   </body>
 </html>
