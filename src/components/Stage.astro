@@ -1,0 +1,246 @@
+---
+// This component contains the entire visual "world" and its scenes.
+// The client-side router will pan this component vertically.
+
+// Data for Themes (could be moved to a separate file)
+const THEMES = {
+  summer: {
+    bg: "/sd.png",
+    cloud: "/cloudl3.png",
+    watertower: "/bobber3b.png",
+    treeline: "/treeline6.png",
+    store: "/bella-store-transparent.png",
+    storeBase: "/store-base.png",
+    bella: "/bella-pose3.png",
+    grass: "/fg5.png"
+  }
+};
+const theme = THEMES.summer;
+
+// Data for Navigation Buttons
+const navButtons = [
+  { label: 'Home',    href: '/',         scene: 'home' },
+  { label: 'About',   href: '/about',    scene: 'about' },
+  { label: 'Shop',    href: '/shop',     scene: 'shop' },
+  { label: 'Gallery', href: '/gallery',  scene: 'gallery' },
+  { label: 'Contact', href: '/contact',  scene: 'contact' },
+];
+
+// Data for store-base waves
+const waves = [
+  { top: 580, height: 5, depth: 0.17 }, { top: 590, height: 10, depth: 0.18 },
+  { top: 600, height: 15, depth: 0.19 }, { top: 610, height: 25, depth: 0.20 },
+  { top: 625, height: 35, depth: 0.21 }, { top: 640, height: 45, depth: 0.22 },
+  { top: 660, height: 55, depth: 0.23 }, { top: 685, height: 65, depth: 0.24 },
+  { top: 715, height: 75, depth: 0.25 },
+];
+---
+
+<div class="viewport">
+  <div id="world" class="world">
+    <!-- ============================================= -->
+    <!-- SCENE 1: HOME                                 -->
+    <!-- ============================================= -->
+    <section id="home" class="scene">
+      <div class="hero-stage__inner">
+        <img id="sky-bg" class="hero-layer" src={theme.bg} alt="Watercolor Sky Background" style="left: 0; top: 0; width: 1920px; height: 1080px; transform: none; z-index: 0;" />
+        <nav class="navBar">
+          {navButtons.map(button => (
+            <a href={button.href}>
+              <button class="navBtn" type="button" style={`background-image: url('${button.image}')`}>
+                <span>{button.label}</span>
+                <i class="grain"></i>
+              </button>
+            </a>
+          ))}
+        </nav>
+        <img class="cloud hero-layer" src={theme.cloud} alt="Cloud" style="left: 1400px; top: 200px; width: 300px; z-index: 0;" />
+        <img class="waterTower hero-layer" src={theme.watertower} alt="Watertower" style="left: 1600px; top: 400px; width: 260px; z-index: 0;" />
+        <div class="treesFar hero-layer" style={`left: 960px; top: 500px; width: 4000px; height: 150px; background-image: url('${theme.treeline}'); background-repeat: repeat-x; background-position: bottom center; background-size: auto 100%;`}></div>
+        {waves.map((wave, i) => (
+          <div class="store-base-wave hero-layer" style={`left: 960px; top: ${wave.top}px; width: 4000px; height: ${wave.height}px; background-image: url('${theme.storeBase}'); background-repeat: repeat-x; background-position: top center; background-size: auto 100%; opacity: ${0.2 + (i * 0.1)}; filter: drop-shadow(0px 2px 5px rgba(0,0,0,0.2));`}></div>
+        ))}
+        <img class="shop hero-layer" src={theme.store} alt="Bella's Storefront" style="left: 960px; top: 585px; width: 600px; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5));" />
+        <div class="grass hero-layer" style={`left: 960px; top: 870px; width: 8000px; height: 360px; background-image: url('${theme.grass}'); background-repeat: no-repeat; background-position: bottom center; background-size: auto 100%;`}></div>
+        <img class="bella hero-layer" id="bella-img" src={theme.bella} alt="Bella" style="left: 375px; top: 759px; width: 270px; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5)); z-index: 50;" />
+      </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- SCENE 2: ABOUT                                -->
+    <!-- ============================================= -->
+    <section id="about" class="scene">
+        <div class="hero-stage__inner">
+            <img class="hero-layer" src={theme.bg} alt="Watercolor Sky Background" style="left: 0; top: 0; width: 1920px; height: 1080px; transform: none; z-index: 0;" />
+             <nav class="navBar">
+                {navButtons.map(button => (
+                    <a href={button.href}>
+                    <button class="navBtn" type="button" style={`background-image: url('${button.image}')`}>
+                        <span>{button.label}</span>
+                        <i class="grain"></i>
+                    </button>
+                    </a>
+                ))}
+            </nav>
+            <img class="bella hero-layer" src={theme.bella} alt="Bella" style="left: 375px; top: 759px; width: 270px; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5)); z-index: 50;" />
+            
+            <div class="about-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #3c2e2a; z-index: 10;">
+                <h1 style="font-family: 'Palatino Linotype', Palatino, serif; font-size: 64px;">About Bella's Dresser</h1>
+                <p style="font-family: 'Nunito', sans-serif; font-size: 24px; max-width: 600px; margin-top: 1rem;">A tiny fairytale boutique where little-daydream dresses come to life. Step into our watercolor world.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- SCENE 3: SHOP (Placeholder)                   -->
+    <!-- ============================================= -->
+    <section id="shop" class="scene">
+      <div style="display: grid; place-items: center; height: 100%; color: #3c2e2a;">
+        <h1>Shop (Placeholder)</h1>
+      </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- SCENE 4: LOOKBOOK (Placeholder)               -->
+    <!-- ============================================= -->
+    <section id="lookbook" class="scene">
+       <div style="display: grid; place-items: center; height: 100%; color: #3c2e2a;">
+        <h1>Lookbook (Placeholder)</h1>
+      </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- SCENE 5: CONTACT (Placeholder)                -->
+    <!-- ============================================= -->
+    <section id="contact" class="scene">
+       <div style="display: grid; place-items: center; height: 100%; color: #3c2e2a;">
+        <h1>Contact (Placeholder)</h1>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<style>
+/* General Scene Styles */
+.viewport { 
+  width: 100vw; 
+  height: 100vh; 
+  overflow: hidden; 
+  position: fixed; 
+  top: 0;
+  left: 0;
+}
+.world { 
+  width: 100vw; 
+  height: 500vh; /* 5 scenes * 100vh */
+  will-change: transform; 
+}
+.scene { 
+  width: 100vw; 
+  height: 100vh; 
+  position: relative;
+  overflow: hidden;
+  background-color: #f8f6f1;
+}
+.hero-stage__inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+  transform-origin: top left;
+  /* GSAP will handle scaling in the router now if needed, but for now we assume fixed size */
+}
+.hero-layer {
+  position: absolute;
+  will-change: transform;
+  user-select: none;
+  pointer-events: none;
+  transform: translate(-50%, -50%); /* Center anchor default */
+}
+
+
+/* --- Button Styles --- */
+:root {
+  --ink:#3c2e2a;
+  --paper:#f6f1e6;
+}
+.navBar{
+  position:absolute;
+  top:42px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:100px;
+  align-items:center;
+  z-index: 100; /* Keep nav on top */
+}
+.navBtn{
+  height:92px;
+  padding: 0 54px;
+  min-width: 220px;
+  border-radius: 14px;
+  border: 1px solid rgba(60,46,42,.22);
+  position: relative;
+  cursor: pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background-size: 100% 100%;
+  background-repeat:no-repeat;
+  transition: all .3s ease-in-out;
+  will-change: transform;
+  filter:
+    drop-shadow(0 10px 14px rgba(25,45,50,.18))
+    drop-shadow(0 26px 40px rgba(25,45,50,.14));
+}
+.navBtn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s ease-in-out;
+  border-radius: inherit;
+  z-index: 0;
+}
+.navBtn span {
+  font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  font-weight: 700;
+  font-size: 44px;
+  line-height: 1;
+  letter-spacing: .4px;
+  color: var(--text, #f2e7d6);
+  -webkit-text-stroke: 1px rgba(70,45,25,.35);
+  text-shadow:
+    0 -1px 0 rgba(255,255,255,.60),
+    0  1px 0 rgba(60,40,25,.25),
+    0  9px 14px rgba(0,0,0,.24);
+  filter: blur(.12px) contrast(1.06);
+  position: relative;
+  z-index: 1;
+}
+.navBtn:hover::before {
+  opacity: 1;
+}
+.navBtn:hover{
+  transform: translateY(-2px);
+}
+.navBtn:active{
+  transform: translateY(0);
+}
+.navBtn .grain{
+    position:absolute;
+    inset:0;
+    border-radius: inherit;
+    pointer-events:none;
+    opacity:.12;
+    background:
+        radial-gradient(14px 10px at 20% 30%, rgba(255,255,255,.55), transparent 60%),
+        radial-gradient(18px 14px at 70% 40%, rgba(0,0,0,.10), transparent 65%),
+        radial-gradient(16px 12px at 40% 75%, rgba(255,255,255,.45), transparent 60%);
+    mix-blend-mode: multiply;
+}
+</style>
