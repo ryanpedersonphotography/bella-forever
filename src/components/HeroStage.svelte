@@ -56,39 +56,28 @@
   ];
 
   const navButtons = [
-    { label: 'Home',    href: '/',         image: '/button1.png' },
-    { label: 'About',   href: '/about',    image: '/button2.png', id: 'about-btn' },
-    { label: 'Shop',    href: '#shop',     image: '/button3.png' },
-    { label: 'Gallery', href: '#gallery',  image: '/button4.png' },
-    { label: 'Contact', href: '#contact',  image: '/button5.png' },
+    { label: 'Home',    href: '/',         image: '/button1.png', scene: 'home' },
+    { label: 'About',   href: '/about',    image: '/button2.png', scene: 'about' },
+    { label: 'Shop',    href: '#shop',     image: '/button3.png', scene: 'shop' },
+    { label: 'Gallery', href: '#gallery',  image: '/button4.png', scene: 'gallery' },
+    { label: 'Contact', href: '#contact',  image: '/button5.png', scene: 'contact' },
   ];
 
-  let snowCanvas; // Reference to the snow canvas
+  function handleSceneChange(event, scene) {
+    event.preventDefault();
 
-  function handleAboutClick(event) {
-    event.preventDefault(); // Prevent default link behavior
-    const stageInnerEl = stageInner; // Reference to the main content container
-    const bellaImgEl = document.getElementById('bella-img'); // Reference to Bella's image
-    const snowCanvasEl = document.getElementById('snow-canvas');
+    if (scene === 'about') {
+      const world = document.getElementById('moving-world');
+      if (!world) return;
 
-    if (!stageInnerEl || !bellaImgEl) return;
-
-    const tl = gsap.timeline({
-      onComplete: () => {
-        window.location.href = '/about'; // Navigate after animation
-      }
-    });
-
-    // Animate stageInner (all content except Bella) to slide left
-    tl.to(stageInnerEl, { x: "-100vw", duration: 1, ease: "power2.inOut" }, 0);
-
-    // Animate Snow canvas (if visible)
-    if (theme.showSnowfall && snowCanvasEl) {
-      tl.to(snowCanvasEl, { x: "-100vw", duration: 1, ease: "power2.inOut" }, 0);
+      gsap.to(world, {
+        y: "-110vh", // Move up by slightly more than viewport height
+        duration: 1.2,
+        ease: "power3.inOut",
+      });
     }
-
-    // Counter-animate Bella to make her appear stationary
-    tl.to(bellaImgEl, { x: "+=100vw", duration: 1, ease: "power2.inOut" }, 0);
+    // Note: To return to the 'home' scene, you would add an 'else if (scene === 'home')'
+    // block here and animate the world back to y: 0.
   }
 
   onMount(() => {
@@ -131,68 +120,67 @@
     <div class="scene hero-stage__inner" bind:this={stageInner}>
       
       <!-- Layer 1: Background -->
-      <img class="sky hero-layer" data-parallax data-depth="0.05" src={theme.bg} alt="Watercolor Sky Background" />
+      <img id="sky-bg" class="sky hero-layer" data-parallax data-depth="0.05" src={theme.bg} alt="Watercolor Sky Background" />
 
-      <!-- Layer 1.1: Cloud -->
-      <img class="cloud hero-layer" data-parallax data-depth="0.1" src={theme.cloud} alt="Cloud" />
+      <!-- Group all moving elements -->
+      <div id="moving-world" style="position: absolute; inset: 0;">
+        <!-- Layer 1.1: Cloud -->
+        <img class="cloud hero-layer" data-parallax data-depth="0.1" src={theme.cloud} alt="Cloud" />
 
-      <!-- Layer 1.2: Watertower -->
-      <img class="waterTower hero-layer" data-parallax data-depth="0.15" src={theme.watertower} alt="Watertower" />
+        <!-- Layer 1.2: Watertower -->
+        <img class="waterTower hero-layer" data-parallax data-depth="0.15" src={theme.watertower} alt="Watertower" />
 
-      <!-- Navigation Bar (New) -->
-      <nav class="navBar">
-        {#each navButtons as button}
-          <a href={button.href}>
-            <button class="navBtn" type="button"
-                    style="background-image: url('{button.image}');">
-              <span>{button.label}</span>
-              <i class="grain"></i>
-            </button>
-          </a>
-        {/each}
-      </nav>
+        <!-- Navigation Bar (New) -->
+        <nav class="navBar">
+          {#each navButtons as button}
+            <a href={button.href} on:click={(e) => handleSceneChange(e, button.scene)}>
+              <button class="navBtn" type="button"
+                      style="background-image: url('{button.image}');">
+                <span>{button.label}</span>
+                <i class="grain"></i>
+              </button>
+            </a>
+          {/each}
+        </nav>
 
-      <!-- Layer 1.1: Cloud -->
-      <!-- Placeholder steam, reusing a cloud or similar asset for now if specific steam asset missing -->
-      <!-- <img class="steam hero-layer" src="/cloudl3.png" style="width: 100px; left: 1650px; top: 380px; opacity: 0.5;" alt="" /> -->
-
-      <!-- Layer 1.5: Treeline -->
-      <div class="treesFar hero-layer" data-parallax data-depth="0.2" 
-           style="left: 960px; top: 500px; width: 4000px; height: 150px; 
-                  background-image: url('{theme.treeline}'); 
-                  background-repeat: repeat-x; 
-                  background-position: bottom center; 
-                  background-size: auto 100%;">
-      </div>
-
-      <!-- Layer 1.8: Ground -->
-      {#if theme.ground}
-        <img class="hero-layer" data-parallax data-depth="0.25" src={theme.ground} alt="Ground" style="left: 0; top: 600px; width: 1920px; height: 600px; object-fit: cover;" />
-      {/if}
-
-      <!-- Layer 1.85: Store Base Waves -->
-      {#each waves as wave, i}
-        <div class="store-base-wave hero-layer" data-parallax data-depth={wave.depth}
-             style="left: 960px; top: {wave.top}px; width: 4000px; height: {wave.height}px;
-                    background-image: url('{theme.storeBase}');
-                    background-repeat: repeat-x;
-                    background-position: top center;
-                    background-size: auto 100%;
-                    opacity: {0.2 + (i * 0.1)};
-                    filter: drop-shadow(0px 2px 5px rgba(0,0,0,0.2));">
+        <!-- Layer 1.5: Treeline -->
+        <div class="treesFar hero-layer" data-parallax data-depth="0.2" 
+             style="left: 960px; top: 500px; width: 4000px; height: 150px; 
+                    background-image: url('{theme.treeline}'); 
+                    background-repeat: repeat-x; 
+                    background-position: bottom center; 
+                    background-size: auto 100%;">
         </div>
-      {/each}
 
-      <!-- Shop Group -->
-      <img class="shop hero-layer" data-parallax data-depth="0.4" src={theme.store} alt="Bella's Storefront" style="left: 960px; top: 585px; width: 600px; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5));" />
-      
-      <!-- Layer 1.9: Grass -->
-      <div class="grass hero-layer" data-parallax data-depth="0.5"
-           style="left: 960px; top: 870px; width: 8000px; height: 360px;
-                  background-image: url('{theme.grass}');
-                  background-repeat: no-repeat;
-                  background-position: bottom center;
-                  background-size: auto 100%;">
+        <!-- Layer 1.8: Ground -->
+        {#if theme.ground}
+          <img class="hero-layer" data-parallax data-depth="0.25" src={theme.ground} alt="Ground" style="left: 0; top: 600px; width: 1920px; height: 600px; object-fit: cover;" />
+        {/if}
+
+        <!-- Layer 1.85: Store Base Waves -->
+        {#each waves as wave, i}
+          <div class="store-base-wave hero-layer" data-parallax data-depth={wave.depth}
+               style="left: 960px; top: {wave.top}px; width: 4000px; height: {wave.height}px;
+                      background-image: url('{theme.storeBase}');
+                      background-repeat: repeat-x;
+                      background-position: top center;
+                      background-size: auto 100%;
+                      opacity: {0.2 + (i * 0.1)};
+                      filter: drop-shadow(0px 2px 5px rgba(0,0,0,0.2));">
+          </div>
+        {/each}
+
+        <!-- Shop Group -->
+        <img class="shop hero-layer" data-parallax data-depth="0.4" src={theme.store} alt="Bella's Storefront" style="left: 960px; top: 585px; width: 600px; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5));" />
+        
+        <!-- Layer 1.9: Grass -->
+        <div class="grass hero-layer" data-parallax data-depth="0.5"
+             style="left: 960px; top: 870px; width: 8000px; height: 360px;
+                    background-image: url('{theme.grass}');
+                    background-repeat: no-repeat;
+                    background-position: bottom center;
+                    background-size: auto 100%;">
+        </div>
       </div>
       
       <!-- Awning/Sign (Implicitly part of store for now, but targeting class if we separate later) -->
