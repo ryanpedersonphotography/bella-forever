@@ -1,0 +1,1 @@
+export const aboutSections = ["story", "location", "team", "faq"];

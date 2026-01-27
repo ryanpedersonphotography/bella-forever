@@ -1,6 +1,6 @@
 ---
 import Stage from "../components/Stage.astro";
-
+import stageRouterUrl from "../scripts/stage-router.ts?url";
 ---
 
 <html>
@@ -22,6 +22,6 @@ import Stage from "../components/Stage.astro";
     </main>
 
     <!-- ✅ Bundles in dev + prod -->
-    <script type="module">import "../scripts/stage-router.ts";</script>
+    <script type="module" src={stageRouterUrl}></script>
   </body>
 </html>
