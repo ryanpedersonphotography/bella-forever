@@ -57,11 +57,37 @@
 
   const navButtons = [
     { label: 'Home',    href: '#home',    image: '/button1.png' },
-    { label: 'About',   href: '#about',   image: '/button2.png' },
+    { label: 'About',   href: '#about',   image: '/button2.png', id: 'about-btn' },
     { label: 'Shop',    href: '#shop',    image: '/button3.png' },
     { label: 'Gallery', href: '#gallery', image: '/button4.png' },
     { label: 'Contact', href: '#contact', image: '/button5.png' },
   ];
+
+  let snowCanvas; // Reference to the snow canvas
+
+  function handleAboutClick(event) {
+    event.preventDefault(); // Prevent default link behavior
+    const stageInnerEl = stageInner; // Reference to the main content container
+    const bellaImgEl = document.getElementById('bella-img'); // Reference to Bella's image
+
+    if (!stageInnerEl || !bellaImgEl) return;
+
+    // Animate stageInner (all content except Bella) to slide left
+    gsap.to(stageInnerEl, { x: "-100vw", duration: 1, ease: "power2.inOut" });
+
+    // Animate Snow canvas (if visible)
+    if (theme.showSnowfall && snowCanvas) {
+      gsap.to(snowCanvas, { x: "-100vw", duration: 1, ease: "power2.inOut" });
+    }
+
+    // Counter-animate Bella to make her appear stationary
+    gsap.to(bellaImgEl, { x: "+100vw", duration: 1, ease: "power2.inOut" });
+
+    // In a real app, you would navigate to /about after the animation completes
+    // setTimeout(() => {
+    //   window.location.href = '/about';
+    // }, 1000); // Match duration
+  }
 
   onMount(() => {
     // 1. Responsive Stage Scaling (Cover)
@@ -171,39 +197,19 @@
       
             <!-- Bella -->
       
-            <img class="bella hero-layer" data-parallax data-depth="0.6" src={theme.bella} alt="Bella" style="left: 375px; top: 759px; width: 270px; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5));" />
+                  <img class="bella hero-layer" id="bella-img" data-parallax data-depth="0.6" src={theme.bella} alt="Bella" style="left: 375px; top: 759px; width: 270px; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5));" />
       
+                  
       
+                            </div>
       
-                </div>
+                  
       
+                  
       
+                  
       
-              </section>
-
-  <!-- CONTENT SECTIONS -->
-  <section class="content" data-section style="margin-top: 100vh;">
-    <div class="copy">
-      <h2>The Atelier</h2>
-      <p>Tucked away in a watercolor world, Bella’s Dresser is where sketches come to life.</p>
-    </div>
-  </section>
-
-  <!-- WINDOW SECTION (CROSSFADE) -->
-  <section class="window-section content" data-section>
-    <div class="copy">
-      <h2>New Arrivals</h2>
-      <p>Scroll to see the collection.</p>
-    </div>
-    <!-- Placeholder for window crossfade logic - using transparent divs to demonstrate structure -->
-    <div class="window-wrap" style="height: 400px; background: rgba(255,255,255,0.5); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin-top: 2rem;">
-        <p style="opacity: 0.5;">(Window Display Area)</p>
-    </div>
-  </section>
-
-  <footer class="content" data-section>
-    <small>© Bella’s Dresser</small>
-  </footer>
+                          </section>
 </div>
 
 <style>
@@ -296,51 +302,67 @@
     align-items:center;
   }
 
-  .navBtn{
-    height:92px;
-    padding: 0 54px;
-    min-width: 220px;
-    border-radius: 14px; /* NOT a pill; this is key */
-    border: 1px solid rgba(60,46,42,.22);
-    position: relative;
-    cursor: pointer;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    background-size: 100% 100%;
-      background-repeat:no-repeat;
-      transition: transform .1s ease;
-      will-change: transform; /* Add hint for browser animation */
-    
-      /* New pixel-based shadow that respects PNG transparency */      filter:
-        drop-shadow(0 10px 14px rgba(25,45,50,.18))
-        drop-shadow(0 26px 40px rgba(25,45,50,.14));
-    }
-    
-    .navBtn:focus {
-      outline: none;
-    }
-    
-    .navBtn span{    font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
-    font-weight: 700;
-    font-size: 44px;
-    line-height: 1;
-    letter-spacing: .4px;
-    color: var(--text, #f2e7d6);
-    -webkit-text-stroke: 1px rgba(70,45,25,.35);
-    text-shadow:
-      0 -1px 0 rgba(255,255,255,.60),
-      0  1px 0 rgba(60,40,25,.25),
-      0  9px 14px rgba(0,0,0,.24);
-    filter: blur(.12px) contrast(1.06);
-    position: relative;
-    z-index: 1;
-  }
+.navBtn{
+  height:92px;
+  padding: 0 54px;
+  min-width: 220px;
+  border-radius: 14px; /* NOT a pill; this is key */
+  border: 1px solid rgba(60,46,42,.22);
+  position: relative;
+  cursor: pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background-size: 100% 100%;
+  background-repeat:no-repeat;
+  transition: all .3s ease-in-out; /* Slower and smoother */
+  will-change: transform; /* Hint for browser animation */
 
-  /* HOVER/ACTIVE */
-  .navBtn:hover{
-    transform: translateY(-1px);
-  }
+  /* New pixel-based shadow that respects PNG transparency */
+  filter:
+    drop-shadow(0 10px 14px rgba(25,45,50,.18))
+    drop-shadow(0 26px 40px rgba(25,45,50,.14));
+}
+
+/* Darkening overlay for hover effect (behind text) */
+.navBtn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent black for darkening */
+  opacity: 0; /* Hidden by default */
+  pointer-events: none; /* Allows clicks to pass through */
+  transition: opacity .3s ease-in-out; /* Animate its opacity */
+  border-radius: inherit; /* Inherit button's border-radius */
+  z-index: 0; /* Ensure it's behind text/image but above actual shadow */
+}
+
+/* Ensure label and background image stay on top of the shadow and darkening overlay */
+.navBtn span {
+  font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  font-weight: 700;
+  font-size: 44px;
+  line-height: 1;
+  letter-spacing: .4px;
+  color: var(--text, #f2e7d6);
+  -webkit-text-stroke: 1px rgba(70,45,25,.35);
+  text-shadow:
+    0 -1px 0 rgba(255,255,255,.60),
+    0  1px 0 rgba(60,40,25,.25),
+    0  9px 14px rgba(0,0,0,.24);
+  filter: blur(.12px) contrast(1.06);
+  position: relative;
+  z-index: 1;
+}
+
+/* Add darkening to hover */
+.navBtn:hover::before {
+  opacity: 1; /* Make overlay visible on hover */
+}
+
+.navBtn:hover{
+  transform: translateY(-2px); /* Lift on hover */
+}
   .navBtn:active{
     transform: translateY(0);
   }

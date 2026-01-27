@@ -87,6 +87,7 @@
 </script>
 
 <canvas
+  id="snow-canvas"
   bind:this={canvas}
   style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 100;"
 ></canvas>
