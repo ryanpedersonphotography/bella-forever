@@ -9,9 +9,10 @@ const routesToScene: Record<string, string> = {
   "/shop": "shop",
   "/gallery": "gallery",
   "/contact": "contact",
+  "/blog": "blog",
 };
 
-const SCENE_ORDER = ["home", "about", "shop", "gallery", "contact"] as const;
+const SCENE_ORDER = ["home", "about", "shop", "gallery", "contact", "blog"] as const;
 const ABOUT_HASH_ORDER = aboutSections; // Use the shared config
 
 const DESIGN_W = 1920;
