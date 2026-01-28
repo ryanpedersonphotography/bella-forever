@@ -131,8 +131,8 @@ import { aboutSections } from "../scripts/stage-config";
   </div>
 
   <!-- PERSISTENT OVERLAY (does NOT move) -->
-  <div class="overlay">
-    <nav class="navBar">
+  <div class="overlay" style="--nav-horizontal-margin: 2rem;">
+    <nav class="navBar" style="top: var(--nav-horizontal-margin);">
       {navButtons.map(button => (
         <NavButton
           label={button.label}
@@ -262,11 +262,12 @@ import { aboutSections } from "../scripts/stage-config";
 :root {
   --ink:#3c2e2a;
   --paper:#f6f1e6;
+  --nav-horizontal-margin: 2rem; /* Define the horizontal margin */
 }
 
   .navBar{
     position:absolute;
-    top:20px;
+    /* top:20px;  -- Removed, now set inline on <nav> */
     left:0;
     width:100%;
     display:flex;
@@ -274,6 +275,8 @@ import { aboutSections } from "../scripts/stage-config";
     align-items:center;
     flex-wrap: wrap;
     gap: 1rem;
+    padding-left: var(--nav-horizontal-margin); /* Apply horizontal margin */
+    padding-right: var(--nav-horizontal-margin); /* Apply horizontal margin */
     z-index: 100; /* Keep nav on top */
     pointer-events: auto; /* re-enable clicks for nav */
   }
