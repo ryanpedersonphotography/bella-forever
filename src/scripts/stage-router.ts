@@ -87,8 +87,10 @@ function animateWorldTo(x: number, y: number, immediate = false) {
 
 function panVerticalToScene(scene: string, immediate = false) {
   const world = getWorld();
-  const x = getX(world);            // PRESERVE X
-  const y = sceneToY(scene);        // CHANGE Y
+  // If navigating to a scene other than 'about', reset x to 0.
+  // Otherwise, preserve the current x (e.g., if navigating from one 'about' sub-section to another within the about scene via main nav)
+  const x = (scene === "about") ? getX(world) : 0;
+  const y = sceneToY(scene);
   setSideNavActive(scene);
   animateWorldTo(x, y, immediate);
 }
