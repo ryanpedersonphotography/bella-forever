@@ -1,0 +1,77 @@
+/* Base button container — assumes the watercolor button is a background image */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  user-select: none;
+
+  /* Keep your existing sizing rules if they already exist somewhere else */
+  min-width: 220px; /* if your UI uses different, match existing */
+  height: 84px;     /* if your UI uses different, match existing */
+
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: center;
+
+  /* Optional: tiny transform for crispness */
+  transform: translateZ(0);
+}
+
+.label {
+  font-family: inherit; /* keep existing font stack */
+  font-weight: 600;     /* adjust only if needed */
+  letter-spacing: 0.5px;
+
+  /* Keep the “storybook” soft light text */
+  color: rgba(255, 255, 255, 0.92);
+
+  /* IMPORTANT: readability improvements */
+  /* 1) modern outline */
+  -webkit-text-stroke: var(--nav-stroke-size) rgba(0, 0, 0, var(--nav-stroke-alpha));
+
+  /* 2) fallback outline via stacked shadows (works everywhere) */
+  text-shadow:
+    /* Outline ring */
+    1px 0   rgba(0, 0, 0, var(--nav-outline-alpha)),
+   -1px 0   rgba(0, 0, 0, var(--nav-outline-alpha)),
+    0   1px rgba(0, 0, 0, var(--nav-outline-alpha)),
+    0  -1px rgba(0, 0, 0, var(--nav-outline-alpha)),
+    1px 1px rgba(0, 0, 0, var(--nav-outline-alpha)),
+   -1px 1px rgba(0, 0, 0, var(--nav-outline-alpha)),
+    1px -1px rgba(0, 0, 0, var(--nav-outline-alpha)),
+   -1px -1px rgba(0, 0, 0, var(--nav-outline-alpha)),
+    /* Soft drop shadow */
+    0   var(--nav-shadow-y) var(--nav-shadow-blur) rgba(0, 0, 0, var(--nav-shadow-alpha));
+}
+
+/* Variant tuning: LIGHT buttons need stronger contrast */
+.light {
+  --nav-stroke-size: 2px;
+  --nav-stroke-alpha: 0.35;
+
+  --nav-outline-alpha: 0.30;
+
+  --nav-shadow-y: 2px;
+  --nav-shadow-blur: 4px;
+  --nav-shadow-alpha: 0.28;
+}
+
+/* Dark buttons: keep it subtle to preserve watercolor softness */
+.dark {
+  --nav-stroke-size: 1px;
+  --nav-stroke-alpha: 0.22;
+
+  --nav-outline-alpha: 0.18;
+
+  --nav-shadow-y: 1px;
+  --nav-shadow-blur: 3px;
+  --nav-shadow-alpha: 0.16;
+}
+
+/* Optional: hover/focus remains gentle */
+.btn:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.35);
+  outline-offset: 4px;
+  border-radius: 14px;
+}

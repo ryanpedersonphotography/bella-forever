@@ -1,8 +1,5 @@
 ---
-// This component contains the entire visual "world" and its scenes.
-// The client-side router will pan this component vertically.
-
-// Data for Themes (could be moved to a separate file)
+import NavButton from "./NavButton.svelte";
 const THEMES = {
   summer: {
     bg: "/sd.png",
@@ -19,12 +16,12 @@ const theme = THEMES.summer;
 
 // Data for Navigation Buttons
 const navButtons = [
-  { label: 'Home',    href: '/',         scene: 'home',    image: '/button1.png' },
-  { label: 'About',   href: '/about',    scene: 'about',   image: '/button2.png' },
-  { label: 'Shop',    href: '/shop',     scene: 'shop',    image: '/button3.png' },
-  { label: 'Gallery', href: '/gallery',  scene: 'gallery', image: '/button4.png' },
-  { label: 'Contact', href: '/contact',  scene: 'contact', image: '/button5.png' },
-  { label: 'Blog',    href: '/blog',     scene: 'blog',    image: '/blog3.png' },
+  { label: 'Home',    href: '/',         scene: 'home',    image: '/button1.png', variant: 'dark' },
+  { label: 'About',   href: '/about',    scene: 'about',   image: '/button2.png', variant: 'dark' },
+  { label: 'Shop',    href: '/shop',     scene: 'shop',    image: '/button3.png', variant: 'light' },
+  { label: 'Gallery', href: '/gallery',  scene: 'gallery', image: '/button4.png', variant: 'dark' },
+  { label: 'Contact', href: '/contact',  scene: 'contact', image: '/button5.png', variant: 'dark' },
+  { label: 'Blog',    href: '/blog',     scene: 'blog',    image: '/blog3.png', variant: 'light' },
 ];
 
 // Data for store-base waves
@@ -137,10 +134,12 @@ import { aboutSections } from "../scripts/stage-config";
   <div class="overlay">
     <nav class="navBar">
       {navButtons.map(button => (
-        <a class="navBtn" href={button.href} style={`background-image: url('${button.image}')`}>
-            <span>{button.label}</span>
-            <i class="grain"></i>
-        </a>
+        <NavButton
+          label={button.label}
+          href={button.href}
+          variant={button.variant}
+          backgroundImage={button.image}
+        />
       ))}
     </nav>
 
@@ -278,89 +277,6 @@ import { aboutSections } from "../scripts/stage-config";
     z-index: 100; /* Keep nav on top */
     pointer-events: auto; /* re-enable clicks for nav */
   }
-
-  .navBtn{
-  height:92px;
-  padding: 0 54px;
-  min-width: 220px;
-  border-radius: 14px;
-  border: 1px solid rgba(60,46,42,.22);
-  position: relative;
-  cursor: pointer;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  background-size: 100% 100%;
-  background-repeat:no-repeat;
-  transition: all .3s ease-in-out;
-  will-change: transform;
-  filter:
-    drop-shadow(0 10px 14px rgba(25,45,50,.18))
-    drop-shadow(0 26px 40px rgba(25,45,50,.14));
-  z-index: 100;
-  text-decoration: none;
-}
-
-@media (max-width: 1200px) {
-  .navBtn {
-    min-width: auto;
-    padding: 0 24px;
-    height: 72px;
-  }
-  .navBtn span {
-    font-size: 32px;
-  }
-}
-
-
-.navBtn::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.3);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .3s ease-in-out;
-  border-radius: inherit;
-  z-index: 0;
-}
-.navBtn span {
-  font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
-  font-weight: 700;
-  font-size: 44px;
-  line-height: 1;
-  letter-spacing: .4px;
-  color: var(--text, #f2e7d6);
-  -webkit-text-stroke: 1px rgba(70,45,25,.35);
-  text-shadow:
-    0 -1px 0 rgba(255,255,255,.60),
-    0  1px 0 rgba(60,40,25,.25),
-    0  9px 14px rgba(0,0,0,.24);
-  filter: blur(.12px) contrast(1.06);
-  position: relative;
-  z-index: 1;
-}
-.navBtn:hover::before {
-  opacity: 1;
-}
-.navBtn:hover{
-  transform: translateY(-2px);
-}
-.navBtn:active{
-  transform: translateY(0);
-}
-.navBtn .grain{
-    position:absolute;
-    inset:0;
-    border-radius: inherit;
-    pointer-events:none;
-    opacity:.12;
-    background:
-        radial-gradient(14px 10px at 20% 30%, rgba(255,255,255,.55), transparent 60%),
-        radial-gradient(18px 14px at 70% 40%, rgba(0,0,0,.10), transparent 65%),
-        radial-gradient(16px 12px at 40% 75%, rgba(255,255,255,.45), transparent 60%);
-    mix-blend-mode: multiply;
-}
 
 .bella {
   position: absolute;
