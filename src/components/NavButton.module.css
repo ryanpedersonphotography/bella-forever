@@ -5,17 +5,19 @@
   justify-content: center;
   text-decoration: none;
   user-select: none;
-
-  /* Keep your existing sizing rules if they already exist somewhere else */
-  min-width: 220px; /* if your UI uses different, match existing */
-  height: 84px;     /* if your UI uses different, match existing */
-
+  height: 92px;
+  min-width: 220px;
   background-repeat: no-repeat;
   background-size: 100% 100%;
   background-position: center;
+  transition: all 0.3s ease-in-out;
+  will-change: transform;
+  filter: drop-shadow(0 10px 14px rgba(25, 45, 50, 0.18))
+    drop-shadow(0 26px 40px rgba(25, 45, 50, 0.14));
+}
 
-  /* Optional: tiny transform for crispness */
-  transform: translateZ(0);
+.btn:hover {
+  transform: translateY(-2px);
 }
 
 .label {
