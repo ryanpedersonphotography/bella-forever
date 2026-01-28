@@ -19,9 +19,11 @@
 }
 
 .label {
-  font-family: inherit; /* keep existing font stack */
-  font-weight: 600;     /* adjust only if needed */
-  letter-spacing: 0.5px;
+  font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  font-weight: 700;
+  font-size: 44px;
+  line-height: 1;
+  letter-spacing: .4px;
 
   /* Keep the “storybook” soft light text */
   color: rgba(255, 255, 255, 0.92);
@@ -43,6 +45,17 @@
    -1px -1px rgba(0, 0, 0, var(--nav-outline-alpha)),
     /* Soft drop shadow */
     0   var(--nav-shadow-y) var(--nav-shadow-blur) rgba(0, 0, 0, var(--nav-shadow-alpha));
+}
+
+@media (max-width: 1200px) {
+  .btn {
+    min-width: auto;
+    padding: 0 24px;
+    height: 72px;
+  }
+  .label {
+    font-size: 32px;
+  }
 }
 
 /* Variant tuning: LIGHT buttons need stronger contrast */
