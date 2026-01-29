@@ -261,7 +261,7 @@ function syncFromUrl(immediate = false) {
 function bindNavHandlers() {
   // Main/top nav: vertical pans, clear hash, preserve X (handled in panVerticalToScene)
   document.addEventListener("click", (e) => {
-    const a = (e.target as HTMLElement).closest<HTMLAnchorElement>(".nav-split a");
+    const a = (e.target as HTMLElement).closest<HTMLAnchorElement>(".navCluster a, a[aria-label='Home']");
     if (!a) return;
 
     const url = new URL(a.href, location.origin);

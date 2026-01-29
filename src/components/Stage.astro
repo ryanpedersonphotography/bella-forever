@@ -135,28 +135,20 @@ import { aboutSections } from "../scripts/stage-config";
 
   <!-- PERSISTENT OVERLAY (does NOT move) -->
   <div class="overlay" style="--nav-horizontal-margin: 2rem;">
-    <img class="hanging-sign" src="/bellassignroses.png" alt="Bella's Dresser sign" />
+    <a class="signLink" href="/" aria-label="Home" title="Home">
+      <img class="hanging-sign" src="/bellassignroses.png" alt="Bella's Dresser sign" />
+    </a>
     
-    <nav class="nav-split left">
-      {leftNav.map(button => (
-        <NavButton
-          label={button.label}
-          href={button.href}
-          variant={button.variant}
-          backgroundImage={button.image}
-        />
-      ))}
-    </nav>
-
-    <nav class="nav-split right">
-      {rightNav.map(button => (
-        <NavButton
-          label={button.label}
-          href={button.href}
-          variant={button.variant}
-          backgroundImage={button.image}
-        />
-      ))}
+    <nav class="navCluster" aria-label="Primary">
+      {navButtons.filter(b => b.label !== 'Home').map(button => {
+        const isActive = Astro.url.pathname === button.href || (button.href !== '/' && Astro.url.pathname.startsWith(button.href));
+        return (
+          <a class={`navTag ${isActive ? 'navTag--active' : ''}`} href={button.href} aria-current={isActive ? 'page' : undefined}>
+            <img class="navTag__img" src={isActive ? "/button1c.png" : "/button1b.png"} alt="" aria-hidden="true" />
+            <span class="navTag__label">{button.label}</span>
+          </a>
+        );
+      })}
     </nav>
 
     <img class="bella" src={theme.bella} alt="Bella" />
@@ -235,10 +227,39 @@ import { aboutSections } from "../scripts/stage-config";
 
 /* stays put while world pans */
 .overlay {
-  position: absolute;
+  position: fixed;
   inset: 0;
   z-index: 10;
   pointer-events: none; /* allow world clicks unless you need them */
+}
+
+/* --- SIGN: top-left + clickable --- */
+.signLink{
+  position: absolute;
+  top: -70px;       /* keep chain attachment above viewport */
+  left: 110px;      /* moves sign to top-left like your mock */
+  z-index: 200;
+  pointer-events: auto; /* clickable even though overlay is pointer-events:none */
+  display: block;
+}
+
+.hanging-sign{
+  position: relative;
+  width: 680px;              /* tune: 640–720 depending on taste */
+  height: auto;
+  pointer-events: auto;       /* allow click (or you can leave image non-clickable and rely on link) */
+  filter: drop-shadow(0 10px 14px rgba(0,0,0,0.18))
+          drop-shadow(0 2px 4px rgba(0,0,0,0.12));
+  transform-origin: 20% 0%;   /* sway feels more “hung” */
+}
+
+/* optional: tiny sway */
+.hanging-sign{
+  animation: signSway 8s ease-in-out infinite;
+}
+ @keyframes signSway{
+  0%,100%{ transform: rotate(-0.25deg); }
+  50%    { transform: rotate(0.25deg); }
 }
 
 #about.scene{
@@ -281,29 +302,82 @@ import { aboutSections } from "../scripts/stage-config";
   --nav-horizontal-margin: 2rem; /* Define the horizontal margin */
 }
 
-  .nav-split {
-    position: fixed;
-    top: 45px; /* Aligns with roughly where chain ends/sign starts given sign top: -70px */
-    display: flex;
-    gap: 1.5rem;
+  .navCluster {
+    --tag-w: 160px;
+    --tag-h: 68px;
+    --gap: 14px;
+
+    position: absolute;
+    top: 60px;        /* pushes it down a bit so it visually lines up with the sign */
+    right: 90px;      /* pulls it in from the edge like your mock */
+
+    display: grid;
+    grid-template-columns: repeat(3, var(--tag-w));
+    grid-auto-rows: var(--tag-h);
+    gap: var(--gap);
+
+    align-items: start;
+    justify-items: start;
+    pointer-events: auto; /* Enable clicks */
     z-index: 100;
-    pointer-events: auto;
-    transform: scale(0.6); /* Shrink by 40% */
   }
 
-  .nav-split.left {
-    right: 50%;
-    margin-right: 360px; /* Half sign width (720/2) */
-    justify-content: flex-end;
-    transform-origin: right center;
+  .navTag {
+    position: relative;
+    width: var(--tag-w);
+    height: var(--tag-h);
+
+    display: inline-block;
+    text-decoration: none;
+
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,0.18));
+    transform: translateY(0);
+    transition: transform 160ms ease, filter 160ms ease;
   }
 
-  .nav-split.right {
-    left: 50%;
-    margin-left: 360px; /* Half sign width */
-    justify-content: flex-start;
-    transform-origin: left center;
+  .navTag__img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    user-select: none;
+    pointer-events: none;
   }
+
+  .navTag__label {
+    position: absolute;
+    inset: 0;
+
+    display: grid;
+    place-items: center;
+
+    font-family: Georgia, serif;
+    font-size: 20px;
+    line-height: 1;
+    color: #3a2a1a;
+    letter-spacing: 0.2px;
+
+    text-shadow: 0 1px 0 rgba(255,255,255,0.35);
+  }
+
+  .navTag:hover {
+    transform: translateY(-1px);
+    filter: drop-shadow(0 9px 14px rgba(0,0,0,0.22));
+  }
+
+  .navTag:active {
+    transform: translateY(0px);
+    filter: drop-shadow(0 5px 8px rgba(0,0,0,0.16));
+  }
+
+  .navTag:focus-visible {
+    outline: 2px solid rgba(58,42,26,0.55);
+    outline-offset: 4px;
+    border-radius: 14px;
+  }
+
+  /* Optional: make the second row align nicer (Contact + Blog) */
+  .navCluster > .navTag:nth-child(4) { grid-column: 1; }
+  .navCluster > .navTag:nth-child(5) { grid-column: 2; }
 
 .bella {
   position: absolute;
@@ -315,28 +389,5 @@ import { aboutSections } from "../scripts/stage-config";
   pointer-events: none;
   z-index: 11;
   filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5));
-}
-
-.hanging-sign{
-  position: fixed;
-  top: -70px;                 /* pulls the chain “attachment” above the screen */
-  left: 50%;
-  transform: translateX(-50%);
-  width: 720px;              /* set your desktop size */
-  height: auto;
-  z-index: 9999;
-  pointer-events: none;
-  filter: drop-shadow(0 10px 14px rgba(0,0,0,0.18))
-          drop-shadow(0 2px 4px rgba(0,0,0,0.12));
-  transform-origin: 50% 0%;
-}
-
-/* optional: tiny sway */
-.hanging-sign{
-  animation: signSway 8s ease-in-out infinite;
-}
- @keyframes signSway{
-  0%,100%{ transform: translateX(-50%) rotate(-0.25deg); }
-  50%    { transform: translateX(-50%) rotate(0.25deg); }
 }
 </style>
