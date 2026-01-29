@@ -3,6 +3,158 @@ import gsap from "gsap";
 console.log("[stage-router] loaded", location.pathname, location.hash);
 import { aboutSections } from "./stage-config";
 
+const SCENE_ORDER = ["home", "about", "shop", "gallery", "contact", "blog"] as const;
+
+function prefersReducedMotion(): boolean {
+  return window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
+}
+
+function getWorld(): HTMLElement {
+  const el = document.querySelector<HTMLElement>("#world");
+  if (!el) throw new Error("Missing #world");
+  return el;
+}
+
+function getSceneRoot(scene: string): HTMLElement | null {
+  return document.querySelector<HTMLElement>(`#${scene}`);
+}
+
+function ensureNavWipe(): HTMLElement {
+  let wipe = document.querySelector<HTMLElement>("#navWipe");
+  if (wipe) return wipe;
+
+  wipe = document.createElement("div");
+  wipe.id = "navWipe";
+  Object.assign(wipe.style, {
+    position: "fixed",
+    inset: "0",
+    zIndex: "9999",
+    pointerEvents: "none",
+    opacity: "0",
+    // Adjust later; keep neutral for now
+    background: "rgba(255,255,255,0.92)",
+    backdropFilter: "blur(10px)",
+    WebkitBackdropFilter: "blur(10px)",
+  } as any);
+
+  document.body.appendChild(wipe);
+  return wipe;
+}
+
+function ensureBgLayer(): HTMLElement {
+  let bg = document.querySelector<HTMLElement>("#bgLayer");
+  if (bg) return bg;
+
+  bg = document.createElement("div");
+  bg.id = "bgLayer";
+  Object.assign(bg.style, {
+    position: "fixed",
+    inset: "0",
+    zIndex: "0",
+    pointerEvents: "none",
+  } as any);
+
+  // Insert bgLayer before everything else in body so it sits behind.
+  document.body.insertBefore(bg, document.body.firstChild);
+  return bg;
+}
+
+function setBackgroundFor(scene: string): void {
+  const bg = ensureBgLayer();
+  bg.setAttribute("data-scene", scene);
+}
+
+function sceneToY(scene: string): number {
+  const i = Math.max(0, SCENE_ORDER.indexOf(scene as any));
+  return -i * window.innerHeight;
+}
+
+function defaultExitTL(scene: string): gsap.core.Timeline {
+  const root = getSceneRoot(scene);
+  const tl = gsap.timeline();
+  if (!root) return tl;
+
+  const targets = Array.from(root.querySelectorAll<HTMLElement>("[data-stage-anim]"));
+  const nodes = targets.length ? targets : [root];
+
+  tl.to(nodes, {
+    autoAlpha: 0,
+    y: -14,
+    duration: 0.25,
+    stagger: targets.length ? 0.02 : 0,
+    ease: "power2.in",
+  });
+
+  return tl;
+}
+
+function defaultEnterTL(scene: string): gsap.core.Timeline {
+  const root = getSceneRoot(scene);
+  const tl = gsap.timeline();
+  if (!root) return tl;
+
+  const targets = Array.from(root.querySelectorAll<HTMLElement>("[data-stage-anim]"));
+  const nodes = targets.length ? targets : [root];
+
+  gsap.set(nodes, { autoAlpha: 0, y: 14 });
+
+  tl.to(nodes, {
+    autoAlpha: 1,
+    y: 0,
+    duration: 0.45,
+    stagger: targets.length ? 0.03 : 0,
+    ease: "power2.out",
+  });
+
+  return tl;
+}
+
+let __isNavAnimating = false;
+
+function transitionToScene(fromScene: string, toScene: string): void {
+  if (__isNavAnimating) return;
+  __isNavAnimating = true;
+
+  const world = getWorld();
+  const wipe = ensureNavWipe();
+
+  const toX = 0;
+  const toY = sceneToY(toScene);
+
+  gsap.killTweensOf(world);
+  gsap.killTweensOf(wipe);
+
+  if (prefersReducedMotion()) {
+    setBackgroundFor(toScene);
+    gsap.set(world, { x: toX, y: toY });
+    __isNavAnimating = false;
+    return;
+  }
+
+  wipe.style.pointerEvents = "auto";
+
+  const tl = gsap.timeline({
+    defaults: { ease: "power3.inOut" },
+    onComplete: () => {
+      wipe.style.pointerEvents = "none";
+      __isNavAnimating = false;
+    },
+  });
+
+  tl.add(defaultExitTL(fromScene), 0);
+
+  tl.to(wipe, { opacity: 1, duration: 0.16, ease: "sine.in" }, 0.12);
+
+  tl.add(() => {
+    setBackgroundFor(toScene);
+    gsap.set(world, { x: toX, y: toY });
+  }, 0.20);
+
+  tl.to(wipe, { opacity: 0, duration: 0.20, ease: "sine.out" }, 0.22);
+
+  tl.add(defaultEnterTL(toScene), 0.24);
+}
+
 const routesToScene: Record<string, string> = {
   "/": "home",
   "/about": "about",
@@ -12,26 +164,15 @@ const routesToScene: Record<string, string> = {
   "/blog": "blog",
 };
 
-const SCENE_ORDER = ["home", "about", "shop", "gallery", "contact", "blog"] as const;
+// const SCENE_ORDER = ["home", "about", "shop", "gallery", "contact", "blog"] as const; // Original line - REMOVED
 const ABOUT_HASH_ORDER = aboutSections; // Use the shared config
 
 const DESIGN_W = 1920;
 const DESIGN_H = 1080;
 
-function getWorld() {
-  const world = document.querySelector<HTMLElement>("#world");
-  if (!world) throw new Error("Missing #world");
-  return world;
-}
-
 function getCamera() {
   // Optional but recommended for “cool” feel
   return document.querySelector<HTMLElement>("#camera");
-}
-
-function sceneToY(scene: string) {
-  const i = Math.max(0, SCENE_ORDER.indexOf(scene as any));
-  return -i * window.innerHeight;
 }
 
 function aboutHashToX(hash: string) {
@@ -129,7 +270,15 @@ function bindNavHandlers() {
     e.preventDefault();
 
     history.pushState({}, "", url.pathname); // clear hash
-    panVerticalToScene(currentSceneFromPath(url.pathname), false);
+    const fromScene = currentSceneFromPath(location.pathname);
+    const toScene = currentSceneFromPath(url.pathname);
+
+    if (fromScene === "about" && toScene === "home") {
+      transitionToScene("about", "home");
+      return;
+    }
+
+    panVerticalToScene(toScene, false);
   });
 
   // Side nav: horizontal pans on /about, update /about#section

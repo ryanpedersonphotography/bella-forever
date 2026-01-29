@@ -53,14 +53,14 @@ import { aboutSections } from "../scripts/stage-config";
         <div class="hero-stage__inner">
           <!-- Background image removed from here -->
           
-          <img class="cloud hero-layer" src={theme.cloud} alt="Cloud" style="left: 1400px; top: 200px; width: 300px; z-index: 0;" />
-          <img class="waterTower hero-layer" src={theme.watertower} alt="Watertower" style="left: 1600px; top: 400px; width: 260px; z-index: 0;" />
-          <div class="treesFar hero-layer" style={`left: 960px; top: 500px; width: 4000px; height: 150px; background-image: url('${theme.treeline}'); background-repeat: repeat-x; background-position: bottom center; background-size: auto 100%;`}></div>
+          <img class="cloud hero-layer" src={theme.cloud} alt="Cloud" style="left: 1400px; top: 200px; width: 300px; z-index: 0;" data-stage-anim />
+          <img class="waterTower hero-layer" src={theme.watertower} alt="Watertower" style="left: 1600px; top: 400px; width: 260px; z-index: 0;" data-stage-anim />
+          <div class="treesFar hero-layer" style={`left: 960px; top: 500px; width: 4000px; height: 150px; background-image: url('${theme.treeline}'); background-repeat: repeat-x; background-position: bottom center; background-size: auto 100%;`} data-stage-anim></div>
           {waves.map((wave, i) => (
-            <div class="store-base-wave hero-layer" style={`left: 960px; top: ${wave.top}px; width: 4000px; height: ${wave.height}px; background-image: url('${theme.storeBase}'); background-repeat: repeat-x; background-position: top center; background-size: auto 100%; opacity: ${0.2 + (i * 0.1)}; filter: drop-shadow(0px 2px 5px rgba(0,0,0,0.2));`}></div>
+            <div class="store-base-wave hero-layer" style={`left: 960px; top: ${wave.top}px; width: 4000px; height: ${wave.height}px; background-image: url('${theme.storeBase}'); background-repeat: repeat-x; background-position: top center; background-size: auto 100%; opacity: ${0.2 + (i * 0.1)}; filter: drop-shadow(0px 2px 5px rgba(0,0,0,0.2));`} data-stage-anim></div>
           ))}
-          <img class="shop hero-layer" src={theme.store} alt="Bella's Storefront" style="left: 960px; top: 585px; width: 600px; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5));" />
-          <div class="grass hero-layer" style={`left: 960px; top: 870px; width: 8000px; height: 360px; background-image: url('${theme.grass}'); background-repeat: no-repeat; background-position: bottom center; background-size: auto 100%;`}></div>
+          <img class="shop hero-layer" src={theme.store} alt="Bella's Storefront" style="left: 960px; top: 585px; width: 600px; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5));" data-stage-anim />
+          <div class="grass hero-layer" style={`left: 960px; top: 870px; width: 8000px; height: 360px; background-image: url('${theme.grass}'); background-repeat: no-repeat; background-position: bottom center; background-size: auto 100%;`} data-stage-anim></div>
         </div>
       </section>
 
@@ -69,23 +69,23 @@ import { aboutSections } from "../scripts/stage-config";
       <!-- ============================================= -->
       <section id="about" class="scene">
           <!-- Horizontal sections -->
-          <div id="story" class="aboutSection">
+          <div id="story" class="aboutSection" data-stage-anim>
             <div class="about-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #3c2e2a; z-index: 10;">
                 <h1 style="font-family: 'Palatino Linotype', Palatino, serif; font-size: 64px;">Our Story</h1>
                 <p style="font-family: 'Nunito', sans-serif; font-size: 24px; max-width: 600px; margin-top: 1rem;">A tiny fairytale boutique where little-daydream dresses come to life. Step into our watercolor world.</p>
             </div>
           </div>
-          <div id="location" class="aboutSection" style="background-color: #fdf6e3;">
+          <div id="location" class="aboutSection" style="background-color: #fdf6e3;" data-stage-anim>
             <div class="about-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #3c2e2a; z-index: 10;">
                 <h1 style="font-family: 'Palatino Linotype', Palatino, serif; font-size: 64px;">Location</h1>
             </div>
           </div>
-          <div id="team" class="aboutSection" style="background-color: #e3fdf6;">
+          <div id="team" class="aboutSection" style="background-color: #e3f6f6;" data-stage-anim>
             <div class="about-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #3c2e2a; z-index: 10;">
                 <h1 style="font-family: 'Palatino Linotype', Palatino, serif; font-size: 64px;">Team</h1>
             </div>
           </div>
-          <div id="faq" class="aboutSection" style="background-color: #f6e3fd;">
+          <div id="faq" class="aboutSection" style="background-color: #f6e3fd;" data-stage-anim>
             <div class="about-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #3c2e2a; z-index: 10;">
                 <h1 style="font-family: 'Palatino Linotype', Palatino, serif; font-size: 64px;">FAQ</h1>
             </div>
@@ -96,7 +96,7 @@ import { aboutSections } from "../scripts/stage-config";
       <!-- SCENE 3: SHOP (Placeholder)                   -->
       <!-- ============================================= -->
       <section id="shop" class="scene">
-        <div style="display: grid; place-items: center; height: 100%; color: #3c2e2a;">
+        <div style="display: grid; place-items: center; height: 100%; color: #3c2e2a;" data-stage-anim>
           <h1>Shop (Placeholder)</h1>
         </div>
       </section>
@@ -105,7 +105,7 @@ import { aboutSections } from "../scripts/stage-config";
       <!-- SCENE 4: GALLERY (Placeholder)                -->
       <!-- ============================================= -->
       <section id="gallery" class="scene">
-         <div style="display: grid; place-items: center; height: 100%; color: #3c2e2a;">
+         <div style="display: grid; place-items: center; height: 100%; color: #3c2e2a;" data-stage-anim>
           <h1>Gallery (Placeholder)</h1>
         </div>
       </section>
@@ -114,7 +114,7 @@ import { aboutSections } from "../scripts/stage-config";
       <!-- SCENE 5: CONTACT (Placeholder)                -->
       <!-- ============================================= -->
       <section id="contact" class="scene">
-         <div style="display: grid; place-items: center; height: 100%; color: #3c2e2a;">
+         <div style="display: grid; place-items: center; height: 100%; color: #3c2e2a;" data-stage-anim>
           <h1>Contact (Placeholder)</h1>
         </div>
       </section>
@@ -123,7 +123,7 @@ import { aboutSections } from "../scripts/stage-config";
       <!-- SCENE 6: BLOG (Placeholder)                   -->
       <!-- ============================================= -->
       <section id="blog" class="scene">
-         <div style="display: grid; place-items: center; height: 100%; color: #3c2e2a;">
+         <div style="display: grid; place-items: center; height: 100%; color: #3c2e2a;" data-stage-anim>
           <h1>Blog (Placeholder)</h1>
         </div>
       </section>
@@ -132,6 +132,7 @@ import { aboutSections } from "../scripts/stage-config";
 
   <!-- PERSISTENT OVERLAY (does NOT move) -->
   <div class="overlay" style="--nav-horizontal-margin: 2rem;">
+    <img class="hanging-sign" src="/bellassignroses.png" alt="Bella's Dresser sign" />
     <nav class="navBar" style="top: var(--nav-horizontal-margin);">
       {navButtons.map(button => (
         <NavButton
@@ -291,5 +292,27 @@ import { aboutSections } from "../scripts/stage-config";
   pointer-events: none;
   z-index: 11;
   filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5));
+}
+
+.hanging-sign{
+  position: fixed;
+  top: -40px;                 /* pulls the chain “attachment” above the screen */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1100px;              /* set your desktop size */
+  height: auto;
+  z-index: 9999;
+  pointer-events: none;
+  filter: drop-shadow(0 18px 28px rgba(0,0,0,0.28));
+  transform-origin: 50% 0%;
+}
+
+/* optional: tiny sway */
+.hanging-sign{
+  animation: signSway 8s ease-in-out infinite;
+}
+ @keyframes signSway{
+  0%,100%{ transform: translateX(-50%) rotate(-0.25deg); }
+  50%    { transform: translateX(-50%) rotate(0.25deg); }
 }
 </style>
