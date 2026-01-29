@@ -1,5 +1,6 @@
 ---
 import NavButton from "./NavButton.svelte";
+import Handwriting from "./Handwriting.svelte";
 const THEMES = {
   summer: {
     bg: "/sd.png",
@@ -80,7 +81,15 @@ import { aboutSections } from "../scripts/stage-config";
           <div id="story" class="aboutSection" data-stage-anim>
             <div class="about-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #3c2e2a; z-index: 10;">
                 <h1 style="font-family: 'Palatino Linotype', Palatino, serif; font-size: 64px;">Our Story</h1>
-                <p style="font-family: 'Nunito', sans-serif; font-size: 24px; max-width: 600px; margin-top: 1rem;">A tiny fairytale boutique where little-daydream dresses come to life. Step into our watercolor world.</p>
+                <div style="max-width: 600px; margin-top: 1rem;">
+                  <Handwriting 
+                    client:visible 
+                    text="A tiny fairytale boutique where little-daydream dresses come to life. Step into our watercolor world." 
+                    fontSize={34} 
+                    color="#3c2e2a" 
+                    duration={1500}
+                  />
+                </div>
             </div>
           </div>
           <div id="location" class="aboutSection" style="background-color: #fdf6e3;" data-stage-anim>
