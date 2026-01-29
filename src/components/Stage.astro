@@ -25,9 +25,6 @@ const navButtons = [
   { label: 'Blog',    href: '/blog',     scene: 'blog',    image: '/blog3.png', variant: 'light' },
 ];
 
-const leftNav = navButtons.slice(0, 3);
-const rightNav = navButtons.slice(3);
-
 // Data for store-base waves
 const waves = [
   { top: 580, height: 5, depth: 0.17 }, { top: 590, height: 10, depth: 0.18 },
@@ -57,6 +54,17 @@ import { aboutSections } from "../scripts/stage-config";
         <div class="hero-stage__inner heroStage">
           <!-- Background image removed from here -->
           
+          <div class="hero-layer" style="left: 800px; top: 150px; width: 400px;" data-stage-anim>
+            <Handwriting 
+              client:visible
+              text="welcome to my site, xoxo bella"
+              fontSize={54}
+              color="#3c2e2a"
+              duration={2000}
+              delay={500}
+            />
+          </div>
+
           <img class="cloud hero-layer" src={theme.cloud} alt="Cloud" style="left: 1400px; top: 200px; width: 300px; z-index: 0;" data-stage-anim />
           <img class="waterTower hero-layer" src={theme.watertower} alt="Watertower" style="left: 1600px; top: 400px; width: 260px; z-index: 0;" data-stage-anim />
           <div class="treesFar hero-layer" style={`left: 960px; top: 500px; width: 4000px; height: 150px; background-image: url('${theme.treeline}'); background-repeat: repeat-x; background-position: bottom center; background-size: auto 100%;`} data-stage-anim></div>
