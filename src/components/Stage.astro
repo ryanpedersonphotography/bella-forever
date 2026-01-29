@@ -53,7 +53,7 @@ import { aboutSections } from "../scripts/stage-config";
       <!-- SCENE 1: HOME                                 -->
       <!-- ============================================= -->
       <section id="home" class="scene">
-        <div class="hero-stage__inner">
+        <div class="hero-stage__inner heroStage">
           <!-- Background image removed from here -->
           
           <img class="cloud hero-layer" src={theme.cloud} alt="Cloud" style="left: 1400px; top: 200px; width: 300px; z-index: 0;" data-stage-anim />
@@ -64,6 +64,11 @@ import { aboutSections } from "../scripts/stage-config";
           ))}
           <img class="shop hero-layer" src={theme.store} alt="Bella's Storefront" style="left: 960px; top: 585px; width: 600px; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5));" data-stage-anim />
           <div class="grass hero-layer" style={`left: 960px; top: 870px; width: 8000px; height: 360px; background-image: url('${theme.grass}'); background-repeat: no-repeat; background-position: bottom center; background-size: auto 100%;`} data-stage-anim></div>
+          
+          <!-- DEPTH OVERLAYS -->
+          <div class="atmoHaze" aria-hidden="true"></div>
+          <div class="storeShadow" aria-hidden="true"></div>
+          <div class="foregroundPop" aria-hidden="true"></div>
         </div>
       </section>
 
@@ -388,6 +393,115 @@ import { aboutSections } from "../scripts/stage-config";
   transform: translate(-50%, -50%);
   pointer-events: none;
   z-index: 11;
-  filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5));
+  filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5)) saturate(1.06) contrast(1.04);
+}
+
+.heroStage {
+  /* --- TUNING VARS (edit these) --- */
+  --haze-y: 46%;            /* where the horizon band starts */
+  --haze-h: 18%;            /* height of haze band */
+  --haze-strength: 0.38;    /* opacity of atmospheric haze */
+  --haze-warmth: 1;         /* 0 = cooler, 1 = warmer */
+
+  --store-shadow-x: 50%;    /* center under store */
+  --store-shadow-y: 72%;    /* vertical position of shadow */
+  --store-shadow-w: 560px;  /* width of shadow ellipse */
+  --store-shadow-h: 90px;   /* height of shadow ellipse */
+  --store-shadow-opacity: 0.22;
+
+  --fg-pop-y: 74%;          /* center of foreground pop */
+  --fg-pop-strength: 0.22;  /* opacity of pop overlay */
+
+  /* Optional “global” micro-vignette to focus center */
+  --vignette-strength: 0.10;
+}
+
+/* =========================================
+   A) BACKGROUND: Atmospheric haze band
+========================================= */
+.atmoHaze{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--haze-y);
+  height: var(--haze-h);
+  pointer-events: none;
+  z-index: 30;
+
+  background:
+    radial-gradient(120% 120% at 50% 40%,
+      rgba(255, 250, 240, calc(var(--haze-strength) * 0.55)) 0%,
+      rgba(255, 250, 240, calc(var(--haze-strength) * 0.35)) 35%,
+      rgba(255, 250, 240, 0) 70%),
+    linear-gradient(to bottom,
+      rgba(255, 255, 255, calc(var(--haze-strength) * 0.15)) 0%,
+      rgba(255, 248, 235, calc(var(--haze-strength) * 0.60)) 35%,
+      rgba(255, 248, 235, calc(var(--haze-strength) * 0.35)) 65%,
+      rgba(255, 255, 255, 0) 100%);
+
+  filter: blur(6px);
+  mix-blend-mode: screen;
+  opacity: 1;
+}
+
+@supports (filter: saturate(1)){
+  .atmoHaze{
+    filter: blur(6px) saturate(calc(1.0 + (var(--haze-warmth) * 0.05)));
+  }
+}
+
+/* =========================================
+   B) MIDGROUND: Soft ground shadow under store
+========================================= */
+.storeShadow{
+  position: absolute;
+  left: 50%;
+  top: var(--store-shadow-y);
+  transform: translateX(-50%);
+  width: var(--store-shadow-w);
+  height: var(--store-shadow-h);
+  pointer-events: none;
+  z-index: 40;
+
+  background: radial-gradient(closest-side,
+    rgba(0,0,0,var(--store-shadow-opacity)) 0%,
+    rgba(0,0,0,calc(var(--store-shadow-opacity) * 0.55)) 35%,
+    rgba(0,0,0,0) 70%);
+
+  filter: blur(10px);
+  mix-blend-mode: multiply;
+  margin-left: 0px;
+}
+
+/* =========================================
+   C) FOREGROUND: Subtle “pop” (lower center)
+========================================= */
+.foregroundPop{
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+
+  background:
+    radial-gradient(55% 45% at 50% var(--fg-pop-y),
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0) 45%,
+      rgba(0,0,0, var(--fg-pop-strength)) 100%),
+    radial-gradient(60% 55% at 50% var(--fg-pop-y),
+      rgba(255, 255, 255, calc(var(--fg-pop-strength) * 0.22)) 0%,
+      rgba(255, 255, 255, calc(var(--fg-pop-strength) * 0.08)) 40%,
+      rgba(255, 255, 255, 0) 70%),
+    radial-gradient(120% 90% at 50% 55%,
+      rgba(0,0,0, var(--vignette-strength)) 0%,
+      rgba(0,0,0, 0) 55%);
+
+  mix-blend-mode: multiply;
+  opacity: 1;
+}
+
+/* OPTIONAL: Water tower push back */
+.waterTower{
+  filter: saturate(0.75) contrast(0.85) blur(0.3px);
+  opacity: 0.78;
 }
 </style>
