@@ -24,6 +24,9 @@ const navButtons = [
   { label: 'Blog',    href: '/blog',     scene: 'blog',    image: '/blog3.png', variant: 'light' },
 ];
 
+const leftNav = navButtons.slice(0, 3);
+const rightNav = navButtons.slice(3);
+
 // Data for store-base waves
 const waves = [
   { top: 580, height: 5, depth: 0.17 }, { top: 590, height: 10, depth: 0.18 },
@@ -133,8 +136,20 @@ import { aboutSections } from "../scripts/stage-config";
   <!-- PERSISTENT OVERLAY (does NOT move) -->
   <div class="overlay" style="--nav-horizontal-margin: 2rem;">
     <img class="hanging-sign" src="/bellassignroses.png" alt="Bella's Dresser sign" />
-    <nav class="navBar" style="top: var(--nav-horizontal-margin);">
-      {navButtons.map(button => (
+    
+    <nav class="nav-split left">
+      {leftNav.map(button => (
+        <NavButton
+          label={button.label}
+          href={button.href}
+          variant={button.variant}
+          backgroundImage={button.image}
+        />
+      ))}
+    </nav>
+
+    <nav class="nav-split right">
+      {rightNav.map(button => (
         <NavButton
           label={button.label}
           href={button.href}
@@ -266,20 +281,28 @@ import { aboutSections } from "../scripts/stage-config";
   --nav-horizontal-margin: 2rem; /* Define the horizontal margin */
 }
 
-  .navBar{
-    position:absolute;
-    /* top:20px;  -- Removed, now set inline on <nav> */
-    left:0;
-    width:100%;
-    display:flex;
-    justify-content: center;
-    align-items:center;
-    flex-wrap: wrap;
-    gap: 1rem;
-    padding-left: var(--nav-horizontal-margin); /* Apply horizontal margin */
-    padding-right: var(--nav-horizontal-margin); /* Apply horizontal margin */
-    z-index: 100; /* Keep nav on top */
-    pointer-events: auto; /* re-enable clicks for nav */
+  .nav-split {
+    position: fixed;
+    top: 45px; /* Aligns with roughly where chain ends/sign starts given sign top: -70px */
+    display: flex;
+    gap: 1.5rem;
+    z-index: 100;
+    pointer-events: auto;
+    transform: scale(0.6); /* Shrink by 40% */
+  }
+
+  .nav-split.left {
+    right: 50%;
+    margin-right: 360px; /* Half sign width (720/2) */
+    justify-content: flex-end;
+    transform-origin: right center;
+  }
+
+  .nav-split.right {
+    left: 50%;
+    margin-left: 360px; /* Half sign width */
+    justify-content: flex-start;
+    transform-origin: left center;
   }
 
 .bella {
@@ -296,14 +319,15 @@ import { aboutSections } from "../scripts/stage-config";
 
 .hanging-sign{
   position: fixed;
-  top: -40px;                 /* pulls the chain “attachment” above the screen */
+  top: -70px;                 /* pulls the chain “attachment” above the screen */
   left: 50%;
   transform: translateX(-50%);
-  width: 1100px;              /* set your desktop size */
+  width: 720px;              /* set your desktop size */
   height: auto;
   z-index: 9999;
   pointer-events: none;
-  filter: drop-shadow(0 18px 28px rgba(0,0,0,0.28));
+  filter: drop-shadow(0 10px 14px rgba(0,0,0,0.18))
+          drop-shadow(0 2px 4px rgba(0,0,0,0.12));
   transform-origin: 50% 0%;
 }
 
