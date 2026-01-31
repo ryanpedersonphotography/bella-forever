@@ -1,6 +1,8 @@
 ---
 import NavButton from "./NavButton.svelte";
 import Handwriting from "./Handwriting.svelte";
+import PixiStage from "./PixiStage.svelte";
+
 const THEMES = {
   summer: {
     bg: "/sd.png",
@@ -25,7 +27,7 @@ const navButtons = [
   { label: 'Blog',    href: '/blog',     scene: 'blog',    image: '/blog3.png', variant: 'light' },
 ];
 
-// Data for store-base waves
+// Data for store-base waves (Now handled by Pixi, kept here for reference or fallback)
 const waves = [
   { top: 580, height: 5, depth: 0.17 }, { top: 590, height: 10, depth: 0.18 },
   { top: 600, height: 15, depth: 0.19 }, { top: 610, height: 25, depth: 0.20 },
@@ -42,6 +44,7 @@ import { aboutSections } from "../scripts/stage-config";
   <!-- STATIONARY BACKGROUND -->
   <div class="background">
     <img class="bg-image" src={theme.bg} alt="Watercolor Sky Background" />
+    <PixiStage client:only="svelte" />
   </div>
 
   <div id="camera">
@@ -65,6 +68,11 @@ import { aboutSections } from "../scripts/stage-config";
             />
           </div>
 
+          <!-- 
+             PIXI REFACTOR: The following elements are now rendered by PixiStage.
+             Keeping them commented out for reference/fallback.
+          -->
+          <!--
           <img class="cloud hero-layer" src={theme.cloud} alt="Cloud" style="left: 1400px; top: 200px; width: 300px; z-index: 0;" data-stage-anim />
           <img class="waterTower hero-layer" src={theme.watertower} alt="Watertower" style="left: 1600px; top: 400px; width: 260px; z-index: 0;" data-stage-anim />
           <div class="treesFar hero-layer" style={`left: 960px; top: 500px; width: 4000px; height: 150px; background-image: url('${theme.treeline}'); background-repeat: repeat-x; background-position: bottom center; background-size: auto 100%;`} data-stage-anim></div>
@@ -73,8 +81,9 @@ import { aboutSections } from "../scripts/stage-config";
           ))}
           <img class="shop hero-layer" src={theme.store} alt="Bella's Storefront" style="left: 960px; top: 585px; width: 600px; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5));" data-stage-anim />
           <div class="grass hero-layer" style={`left: 960px; top: 870px; width: 8000px; height: 360px; background-image: url('${theme.grass}'); background-repeat: no-repeat; background-position: bottom center; background-size: auto 100%;`} data-stage-anim></div>
+          -->
           
-          <!-- DEPTH OVERLAYS -->
+          <!-- DEPTH OVERLAYS (Keep these in DOM for now as they are global effects) -->
           <div class="atmoHaze" aria-hidden="true"></div>
           <div class="storeShadow" aria-hidden="true"></div>
           <div class="foregroundPop" aria-hidden="true"></div>
@@ -273,15 +282,7 @@ import { aboutSections } from "../scripts/stage-config";
   filter: drop-shadow(0 10px 14px rgba(0,0,0,0.18))
           drop-shadow(0 2px 4px rgba(0,0,0,0.12));
   transform-origin: 20% 0%;   /* sway feels more “hung” */
-}
-
-/* optional: tiny sway */
-.hanging-sign{
-  animation: signSway 8s ease-in-out infinite;
-}
- @keyframes signSway{
-  0%,100%{ transform: rotate(-0.25deg); }
-  50%    { transform: rotate(0.25deg); }
+  will-change: transform;
 }
 
 #about.scene{
@@ -522,3 +523,30 @@ import { aboutSections } from "../scripts/stage-config";
   opacity: 0.78;
 }
 </style>
+
+<script>
+  import gsap from "gsap";
+
+  function initSignSway() {
+    const sign = document.querySelector('.hanging-sign');
+    if (!sign) return;
+
+    function sway() {
+      // Randomized values for a natural "wind" feel
+      const duration = 3 + Math.random() * 4; // 3-7 seconds
+      const rotation = -0.6 + Math.random() * 1.2; // -0.6 to +0.6 degrees
+      
+      gsap.to(sign, {
+        rotation: rotation,
+        duration: duration,
+        ease: "sine.inOut",
+        onComplete: sway
+      });
+    }
+
+    sway();
+  }
+
+  // Initialize on load
+  window.addEventListener('load', initSignSway);
+</script>
