@@ -67,6 +67,7 @@ const currentScene = routesToScene[pathname] || "home";
     {mode === 'fancy' && <PixiStage client:only="svelte" scene={currentScene} />}
   </div>
 
+  <!-- SIMPLE MODE: Render DOM Camera & World (Legacy/Mobile) -->
   {mode === 'simple' && (
   <div id="camera">
     <!-- MOVING WORLD (scenes only) -->
