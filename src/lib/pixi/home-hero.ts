@@ -10,12 +10,6 @@ export type HeroAssets = {
   grass: string;
 };
 
-type MountedHero = {
-  ready: Promise<void>;
-  setActive: (active: boolean) => void;
-  destroy: () => void;
-};
-
 type WaveDef = { top: number; height: number; opacity: number };
 
 const WAVES: WaveDef[] = [
@@ -74,102 +68,51 @@ function makeRepeatBand(
   return band;
 }
 
-export function mountPixiHomeHero(host: HTMLElement, assets: HeroAssets): MountedHero {
-  let app: PIXI.Application | null = null;
+export function createHomeHero(assets: HeroAssets) {
+  const container = new PIXI.Container();
   let tl: gsap.core.Timeline | null = null;
+  const tickHandlers: ((delta: number) => void)[] = [];
 
-  let root: PIXI.Container | null = null;
-  let far: PIXI.Container | null = null;
-  let mid: PIXI.Container | null = null;
-  let near: PIXI.Container | null = null;
+  // Layers
+  const far = new PIXI.Container();
+  const mid = new PIXI.Container();
+  const near = new PIXI.Container();
 
-  let isBuilt = false;
-  let isActive = false;
+  container.addChild(far);
+  container.addChild(mid);
+  container.addChild(near);
 
-  // Hidden by default until activated.
-  host.style.display = "none";
-
-  const ready = (async () => {
-    app = new PIXI.Application();
-    await app.init({
-      resizeTo: host,
-      backgroundAlpha: 0, // Keep it transparent to see the CSS background if needed
-      antialias: true,
-      autoDensity: true,
-      resolution: Math.min(window.devicePixelRatio || 1, 2),
-    });
-
-    // Ensure canvas fills host.
-    app.canvas.style.width = "100%";
-    app.canvas.style.height = "100%";
-    app.canvas.style.display = "block";
-    host.appendChild(app.canvas);
-
-    // Root containers (entities)
-    root = new PIXI.Container();
-    far = new PIXI.Container();
-    mid = new PIXI.Container();
-    near = new PIXI.Container();
-
-    root.addChild(far);
-    root.addChild(mid);
-    root.addChild(near);
+  // Load textures
+  const loadPromise = Promise.all([
+    PIXI.Assets.load(assets.cloud),
+    PIXI.Assets.load(assets.watertower),
+    PIXI.Assets.load(assets.treeline),
+    PIXI.Assets.load(assets.store),
+    PIXI.Assets.load(assets.storeBase),
+    PIXI.Assets.load(assets.grass),
+  ]).then(([cloudTex, towerTex, treeTex, storeTex, storeBaseTex, grassTex]) => {
     
-    // Scale root to fit 1920x1080 design into current view
-    // We want 'cover' behavior or 'contain' depending on preference.
-    // Given the stage nature, let's use a scale strategy that keeps center focus.
-    const resizeRoot = () => {
-        if (!app) return;
-        const scale = Math.max(app.screen.width / 1920, app.screen.height / 1080);
-        root!.scale.set(scale);
-        root!.position.set(app.screen.width / 2, app.screen.height / 2);
-        root!.pivot.set(1920 / 2, 1080 / 2);
-    };
-    app.renderer.on('resize', resizeRoot);
-    resizeRoot(); // Initial scale
-
-    app.stage.addChild(root);
-
-    // Load textures
-    const [cloudTex, towerTex, treeTex, storeTex, storeBaseTex, grassTex] = await Promise.all([
-      PIXI.Assets.load(assets.cloud),
-      PIXI.Assets.load(assets.watertower),
-      PIXI.Assets.load(assets.treeline),
-      PIXI.Assets.load(assets.store),
-      PIXI.Assets.load(assets.storeBase),
-      PIXI.Assets.load(assets.grass),
-    ]);
-
     // === LAYER: Cloud ===
-    // DOM: left=1400 top=200 width=300
     const cloud = new PIXI.Sprite(cloudTex);
     setSpriteCenteredByWidth(cloud, 1400, 200, 300);
     far.addChild(cloud);
 
-    // [New] Ambient Animation: Drifting Cloud
-    app.ticker.add((ticker) => {
-      // Move slightly to the right each frame
-      // deltaMS scales the speed by frame time so it's consistent across refresh rates
-      cloud.x += 0.015 * ticker.deltaMS; 
-
-      // Reset if it goes too far right (assuming 1920 width + buffer)
-      if (cloud.x > 2100) {
-        cloud.x = -300;
-      }
+    // Drifting Cloud Animation
+    tickHandlers.push((delta) => {
+      cloud.x += 0.015 * delta; 
+      if (cloud.x > 2100) cloud.x = -300;
     });
 
     // === LAYER: Watertower ===
-    // DOM: left=1600 top=400 width=260
     const tower = new PIXI.Sprite(towerTex);
     setSpriteCenteredByWidth(tower, 1600, 400, 260);
     far.addChild(tower);
 
-    // === LAYER: Trees Far (repeat-x band) ===
-    // DOM: center (960,500), size 4000x150
+    // === LAYER: Trees Far ===
     const treesFar = makeRepeatBand(treeTex, 960, 500, 4000, 150);
     far.addChild(treesFar);
 
-    // === LAYER STACK: Store-base waves (repeat-x bands) ===
+    // === LAYER STACK: Waves ===
     for (let i = 0; i < WAVES.length; i++) {
       const w = WAVES[i]!;
       const wave = makeRepeatBand(storeBaseTex, 960, w.top, 4000, w.height);
@@ -178,108 +121,24 @@ export function mountPixiHomeHero(host: HTMLElement, assets: HeroAssets): Mounte
     }
 
     // === LAYER: Storefront ===
-    // DOM: left=960 top=585 width=600
     const store = new PIXI.Sprite(storeTex);
     setSpriteCenteredByWidth(store, 960, 585, 600);
     mid.addChild(store);
 
-    // === LAYER: Grass foreground ===
-    // DOM: center (960,870), height=360
+    // === LAYER: Grass ===
     const grass = new PIXI.Sprite(grassTex);
     setSpriteCenteredByHeight(grass, 960, 870, 360);
     near.addChild(grass);
 
-    // Default state: invisible until activated
-    far.alpha = 0;
-    mid.alpha = 0;
-    near.alpha = 0;
-
-    // Don’t burn GPU until activated.
-    app.ticker.stop();
-
-    isBuilt = true;
-    
-    // If it was set active while loading, trigger animation now
-    if (isActive) setActive(true);
-  })();
-
-  function killTL() {
-    if (tl) {
-      tl.kill();
-      tl = null;
-    }
-  }
-
-  function setActive(nextActive: boolean) {
-    isActive = nextActive;
-
-    if (!isBuilt || !app || !far || !mid || !near) return;
-
-    killTL();
-
-    if (nextActive) {
-      host.style.display = "block";
-      app.ticker.start();
-
-      // Reset + enter animation
-      far.alpha = 0;
-      mid.alpha = 0;
-      near.alpha = 0;
-
-      const baseFarY = 0;
-      const baseMidY = 0;
-      const baseNearY = 0;
-
-      far.y = baseFarY;
-      mid.y = baseMidY + 10;
-      near.y = baseNearY + 16;
-
-      tl = gsap.timeline({ defaults: { ease: "power2.out" } });
-      tl.to(far, { alpha: 1, duration: 0.35 }, 0);
-      tl.to(mid, { alpha: 1, y: baseMidY, duration: 0.55 }, 0.05);
-      tl.to(near, { alpha: 1, y: baseNearY, duration: 0.65 }, 0.08);
-      return;
-    }
-
-    // Exit animation then hide host
-    tl = gsap.timeline({
-      defaults: { ease: "power2.in" },
-      onComplete: () => {
-        if (!app) return;
-        app.ticker.stop();
-        if (!isActive) host.style.display = "none";
-      },
-    });
-    tl.to([far, mid, near], { alpha: 0, duration: 0.25, stagger: 0.02 }, 0);
-  }
+    // Initial State: Visible
+    // (We removed the enter animation for now to simplify integration, 
+    // or we can add it back if desired)
+  });
 
   function destroy() {
-    killTL();
-
-    // Best-effort unload for this feature (keeps the rest of the app safe).
-    try {
-      // Pixi v8 exposes unload; if it’s not available in your installed version, this no-ops.
-      (PIXI.Assets as any).unload?.([
-        assets.cloud,
-        assets.watertower,
-        assets.treeline,
-        assets.store,
-        assets.storeBase,
-        assets.grass,
-      ]);
-    } catch {
-      // ignore
-    }
-
-    if (app) {
-      app.destroy(true);
-      app = null;
-    }
-
-    host.innerHTML = "";
-    isBuilt = false;
-    isActive = false;
+    if (tl) tl.kill();
+    container.destroy({ children: true });
   }
 
-  return { ready, setActive, destroy };
+  return { container, loadPromise, tickHandlers, destroy };
 }

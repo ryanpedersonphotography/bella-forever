@@ -1,5 +1,6 @@
 import * as PIXI from "pixi.js";
 import gsap from "gsap";
+import { createHomeHero, type HeroAssets } from "./home-hero";
 
 export type StageManager = {
   mount: (container: HTMLElement) => Promise<void>;
@@ -11,9 +12,17 @@ export type StageManager = {
 let app: PIXI.Application | null = null;
 let world: PIXI.Container | null = null;
 let currentSceneId = 'home';
+let tickHandlers: ((delta: number) => void)[] = [];
 
-// Scene Registry (Placeholders for now, except Home)
-const scenes: Record<string, PIXI.Container> = {};
+// HARDCODED ASSETS (Ideally passed in)
+const assets: HeroAssets = {
+  cloud: "/cloudl3.png",
+  watertower: "/bobber3b.png",
+  treeline: "/treeline6.png",
+  store: "/bella-store-transparent.png",
+  storeBase: "/store-base.png",
+  grass: "/fg5.png"
+};
 
 export function createStageManager(): StageManager {
   
@@ -48,24 +57,40 @@ export function createStageManager(): StageManager {
     app.renderer.on('resize', resize);
     resize();
 
-    // --- DEBUG: Add placeholders for scenes ---
-    const colors = [0xFFCCCC, 0xCCFFCC, 0xCCCCFF, 0xFFFFCC, 0xCCFFFF, 0xFFCCFF];
-    const sceneNames = ['home', 'about', 'shop', 'gallery', 'contact', 'blog'];
+    // --- SETUP SCENES ---
+    
+    // 1. HOME SCENE (Real Assets)
+    const homeHero = createHomeHero(assets);
+    world.addChild(homeHero.container);
+    // Home is at Scene Index 0 (Y=0), so no positioning needed.
+    
+    // Wire up animation ticks
+    homeHero.loadPromise.then(() => {
+        tickHandlers.push(...homeHero.tickHandlers);
+    });
+
+    // 2. OTHER SCENES (Placeholders)
+    const colors = [0xCCFFCC, 0xCCCCFF, 0xFFFFCC, 0xCCFFFF, 0xFFCCFF]; // Skipped Home color
+    const sceneNames = ['about', 'shop', 'gallery', 'contact', 'blog'];
     
     sceneNames.forEach((name, i) => {
       const rect = new PIXI.Graphics();
       rect.rect(0, 0, 1920, 1080);
       rect.fill(colors[i]);
-      rect.y = i * 1080; // Stack vertically
+      rect.y = (i + 1) * 1080; // Start at index 1
       
-      // Add text label
       const text = new PIXI.Text({ text: name.toUpperCase(), style: { fontSize: 100, fill: 0x000000 } });
       text.anchor.set(0.5);
       text.x = 1920 / 2;
-      text.y = (i * 1080) + 540;
+      text.y = ((i + 1) * 1080) + 540;
       
       world!.addChild(rect);
       world!.addChild(text);
+    });
+    
+    // Global Ticker
+    app.ticker.add((ticker) => {
+        tickHandlers.forEach(fn => fn(ticker.deltaMS));
     });
   }
 
@@ -79,13 +104,7 @@ export function createStageManager(): StageManager {
     const index = sceneNames.indexOf(sceneId);
     
     if (index >= 0) {
-      // Move the world up to show the correct scene
-      // Pivot is at center (1920/2, 1080/2).
-      // Scene 0 center is at 540. Scene 1 center is at 1080 + 540.
-      // We want to move the pivot Y.
-      // Default pivot Y = 540.
-      // To show Scene 1, pivot Y needs to be 540 + 1080.
-      
+      // Pivot Y Target: 540 + (index * 1080)
       const targetPivotY = 540 + (index * 1080);
       
       gsap.to(world.pivot, {
@@ -97,6 +116,7 @@ export function createStageManager(): StageManager {
   }
 
   function destroy() {
+    tickHandlers = []; // clear handlers
     if (app) {
       app.destroy(true);
       app = null;
