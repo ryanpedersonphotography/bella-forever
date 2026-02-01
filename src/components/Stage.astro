@@ -2,13 +2,11 @@
 import NavButton from "./NavButton.svelte";
 import PixiStage from "./PixiStage.svelte";
 
-const THEMES = {
-  summer: { bg: "/sd.png" },
-};
-
+const THEMES = { summer: { bg: "/sd.png" } };
 const theme = THEMES.summer;
 
-// Map URL -> Scene
+import { aboutSections } from "../scripts/stage-config";
+
 const pathname = Astro.url.pathname;
 const routesToScene: Record<string, string> = {
   "/": "home",
@@ -19,8 +17,6 @@ const routesToScene: Record<string, string> = {
   "/blog": "blog",
 };
 const currentScene = routesToScene[pathname] || "home";
-
-import { aboutSections } from "../scripts/stage-config";
 ---
 
 <div class="viewport">
@@ -49,7 +45,5 @@ import { aboutSections } from "../scripts/stage-config";
     </aside>
   </div>
 
-  <div class="foreground">
-    <!-- <img src="/img/foreground-grass.png" alt="" /> -->
-  </div>
+  <div class="foreground"></div>
 </div>
