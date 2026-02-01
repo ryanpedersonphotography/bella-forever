@@ -1,42 +1,29 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  import { mountPixiHomeHero } from '../lib/pixi/home-hero';
+  import { createStageManager } from '../lib/pixi/stage-manager';
   
-  // Expose a prop to control activation (e.g., only active on 'home' scene)
-  export let active = true;
+  // Expose a prop to control activation/scene
+  export let scene = 'home';
 
   let container: HTMLDivElement;
-  let heroInstance: ReturnType<typeof mountPixiHomeHero> | null = null;
+  let manager: ReturnType<typeof createStageManager> | null = null;
 
-  const assets = {
-    bg: "/sd.png",
-    cloud: "/cloudl3.png",
-    watertower: "/bobber3b.png",
-    treeline: "/treeline6.png",
-    store: "/bella-store-transparent.png",
-    storeBase: "/store-base.png",
-    bella: "/bella-pose3.png",
-    grass: "/fg5.png"
-  };
-
-  onMount(() => {
+  onMount(async () => {
     if (container) {
-        heroInstance = mountPixiHomeHero(container, assets);
-        // Wait for ready then sync active state
-        heroInstance.ready.then(() => {
-            if (heroInstance) heroInstance.setActive(active);
-        });
+        manager = createStageManager();
+        await manager.mount(container);
+        manager.goToScene(scene);
     }
   });
 
-  // Reactively update active state
-  $: if (heroInstance) {
-      heroInstance.setActive(active);
+  // Reactively update scene
+  $: if (manager && scene) {
+      manager.goToScene(scene);
   }
 
   onDestroy(() => {
-    if (heroInstance) {
-        heroInstance.destroy();
+    if (manager) {
+        manager.destroy();
     }
   });
 </script>
@@ -50,7 +37,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 1; /* Sit above background but below overlays */
-    pointer-events: none; /* Let clicks pass through */
+    z-index: 1;
+    pointer-events: none;
   }
 </style>
