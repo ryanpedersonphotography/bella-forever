@@ -1,6 +1,10 @@
 ---
 import Stage from "../components/Stage.astro";
 import stageRouterUrl from "../scripts/stage-router.ts?url";
+
+const pathname = Astro.url.pathname;
+const isSimple = pathname === '/simple' || pathname.startsWith('/simple/');
+const mode = isSimple ? 'simple' : 'fancy';
 ---
 
 <html>
@@ -8,7 +12,9 @@ import stageRouterUrl from "../scripts/stage-router.ts?url";
     <meta charset="utf-8" />
     <title>Bella's Dresser</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script is:inline>
+    <script is:inline define:vars={{ mode }}>
+      console.log(`[MODE] ${mode.toUpperCase()}`);
+      
       (function(){
         const path = location.pathname;
 
@@ -41,14 +47,14 @@ import stageRouterUrl from "../scripts/stage-router.ts?url";
   </head>
 
   <body>
-    <Stage />
+    <Stage mode={mode} />
 
     <!-- The “page content slot” can change, stage stays -->
     <main id="page">
       <slot />
     </main>
 
-    <!-- ✅ Bundles in dev + prod -->
-    <script type="module" src={stageRouterUrl}></script>
+    <!-- ✅ Bundles in dev + prod, ONLY load in SIMPLE mode -->
+    {mode === 'simple' && <script type="module" src={stageRouterUrl}></script>}
   </body>
 </html>
