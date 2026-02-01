@@ -14,6 +14,39 @@
         await manager.mount(container);
         manager.goToScene(scene);
     }
+
+    // Intercept Nav Clicks (SPA behavior for Fancy Mode)
+    const handleNavClick = (e: MouseEvent) => {
+        const a = (e.target as HTMLElement).closest<HTMLAnchorElement>(".navCluster a, a[aria-label='Home'], .sideNav a");
+        if (!a) return;
+
+        const url = new URL(a.href, location.origin);
+        if (url.origin !== location.origin) return;
+
+        e.preventDefault();
+        history.pushState({}, "", url.href);
+        
+        // Simple mapping: /about -> 'about'
+        const path = url.pathname === '/' ? '/home' : url.pathname;
+        const newScene = path.replace('/', '') || 'home';
+        
+        // Update local state (triggers reactive statement)
+        scene = newScene;
+    };
+
+    document.addEventListener('click', handleNavClick);
+
+    // Handle Back/Forward buttons
+    const handlePopState = () => {
+        const path = location.pathname === '/' ? '/home' : location.pathname;
+        scene = path.replace('/', '') || 'home';
+    };
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+        document.removeEventListener('click', handleNavClick);
+        window.removeEventListener('popstate', handlePopState);
+    };
   });
 
   // Reactively update scene

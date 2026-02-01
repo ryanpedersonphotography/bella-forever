@@ -44,13 +44,27 @@ interface Props {
 }
 
 const { mode } = Astro.props;
+
+// Map URL to Scene
+const pathname = Astro.url.pathname;
+const routesToScene: Record<string, string> = {
+  "/": "home",
+  "/about": "about",
+  "/shop": "shop",
+  "/gallery": "gallery",
+  "/contact": "contact",
+  "/blog": "blog",
+};
+const currentScene = routesToScene[pathname] || "home";
 ---
 
 <div class="viewport">
   <!-- STATIONARY BACKGROUND -->
   <div class="background">
     <img class="bg-image" src={theme.bg} alt="Watercolor Sky Background" />
-    {mode === 'fancy' && <PixiStage client:only="svelte" />}
+    
+    <!-- FANCY MODE: Render Pixi Canvas -->
+    {mode === 'fancy' && <PixiStage client:only="svelte" scene={currentScene} />}
   </div>
 
   {mode === 'simple' && (
