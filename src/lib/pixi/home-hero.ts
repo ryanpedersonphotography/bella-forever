@@ -10,6 +10,13 @@ export type HeroAssets = {
   grass: string;
 };
 
+export type HomeHero = {
+  container: PIXI.Container;
+  loadPromise: Promise<void>;
+  tick: (deltaMS: number) => void;
+  destroy: () => void;
+};
+
 type WaveDef = { top: number; height: number; opacity: number };
 
 const WAVES: WaveDef[] = [
@@ -36,9 +43,8 @@ function setSpriteCenteredByWidth(
 ) {
   sprite.anchor.set(0.5);
   sprite.position.set(cx, cy);
-  // Pixi will preserve aspect ratio when setting one dimension.
   sprite.width = desiredW;
-  sprite.scale.y = sprite.scale.x; // Ensure uniform scaling
+  sprite.scale.y = sprite.scale.x; 
 }
 
 function setSpriteCenteredByHeight(
@@ -50,7 +56,7 @@ function setSpriteCenteredByHeight(
   sprite.anchor.set(0.5);
   sprite.position.set(cx, cy);
   sprite.height = desiredH;
-  sprite.scale.x = sprite.scale.y; // Ensure uniform scaling
+  sprite.scale.x = sprite.scale.y;
 }
 
 function makeRepeatBand(
@@ -61,19 +67,16 @@ function makeRepeatBand(
   height: number
 ) {
   const band = new PIXI.TilingSprite({ texture: tex, width, height });
-  // TilingSprite origin is top-left by default and anchor support varies by version/type
-  // simpler to calculate top-left position manually
   const tl = topLeftFromCenter(centerX, centerY, width, height);
   band.position.set(tl.x, tl.y);
   return band;
 }
 
-export function createHomeHero(assets: HeroAssets) {
+export function createHomeHero(assets: HeroAssets): HomeHero {
   const container = new PIXI.Container();
   let tl: gsap.core.Timeline | null = null;
-  const tickHandlers: ((delta: number) => void)[] = [];
+  const tickFns: Array<(deltaMS: number) => void> = [];
 
-  // Layers
   const far = new PIXI.Container();
   const mid = new PIXI.Container();
   const near = new PIXI.Container();
@@ -82,8 +85,7 @@ export function createHomeHero(assets: HeroAssets) {
   container.addChild(mid);
   container.addChild(near);
 
-  // Load textures
-  const loadPromise = Promise.all([
+  const loadPromise: Promise<void> = Promise.all([
     PIXI.Assets.load(assets.cloud),
     PIXI.Assets.load(assets.watertower),
     PIXI.Assets.load(assets.treeline),
@@ -92,27 +94,22 @@ export function createHomeHero(assets: HeroAssets) {
     PIXI.Assets.load(assets.grass),
   ]).then(([cloudTex, towerTex, treeTex, storeTex, storeBaseTex, grassTex]) => {
     
-    // === LAYER: Cloud ===
     const cloud = new PIXI.Sprite(cloudTex);
     setSpriteCenteredByWidth(cloud, 1400, 200, 300);
     far.addChild(cloud);
 
-    // Drifting Cloud Animation
-    tickHandlers.push((delta) => {
-      cloud.x += 0.015 * delta; 
+    tickFns.push((deltaMS) => {
+      cloud.x += 0.015 * deltaMS; 
       if (cloud.x > 2100) cloud.x = -300;
     });
 
-    // === LAYER: Watertower ===
     const tower = new PIXI.Sprite(towerTex);
     setSpriteCenteredByWidth(tower, 1600, 400, 260);
     far.addChild(tower);
 
-    // === LAYER: Trees Far ===
     const treesFar = makeRepeatBand(treeTex, 960, 500, 4000, 150);
     far.addChild(treesFar);
 
-    // === LAYER STACK: Waves ===
     for (let i = 0; i < WAVES.length; i++) {
       const w = WAVES[i]!;
       const wave = makeRepeatBand(storeBaseTex, 960, w.top, 4000, w.height);
@@ -120,25 +117,27 @@ export function createHomeHero(assets: HeroAssets) {
       mid.addChild(wave);
     }
 
-    // === LAYER: Storefront ===
     const store = new PIXI.Sprite(storeTex);
     setSpriteCenteredByWidth(store, 960, 585, 600);
     mid.addChild(store);
 
-    // === LAYER: Grass ===
     const grass = new PIXI.Sprite(grassTex);
     setSpriteCenteredByHeight(grass, 960, 870, 360);
     near.addChild(grass);
-
-    // Initial State: Visible
-    // (We removed the enter animation for now to simplify integration, 
-    // or we can add it back if desired)
   });
 
+  function tick(deltaMS: number) {
+    for (const fn of tickFns) fn(deltaMS);
+  }
+
   function destroy() {
-    if (tl) tl.kill();
+    if (tl) {
+      tl.kill();
+      tl = null;
+    }
+    tickFns.length = 0;
     container.destroy({ children: true });
   }
 
-  return { container, loadPromise, tickHandlers, destroy };
+  return { container, loadPromise, tick, destroy };
 }
