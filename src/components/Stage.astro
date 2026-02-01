@@ -1,6 +1,5 @@
 ---
 import NavButton from "./NavButton.svelte";
-import Handwriting from "./Handwriting.svelte";
 import PixiStage from "./PixiStage.svelte";
 
 const THEMES = {
@@ -21,20 +20,15 @@ const routesToScene: Record<string, string> = {
 };
 const currentScene = routesToScene[pathname] || "home";
 
-// About side-nav sections (keep your existing source of truth; adjust if needed)
 import { aboutSections } from "../scripts/stage-config";
 ---
 
 <div class="viewport">
-  <!-- STATIONARY BACKGROUND -->
   <div class="background">
     <img class="bg-image" src={theme.bg} alt="Watercolor Sky Background" />
-
-    <!-- PIXI CANVAS -->
     <PixiStage client:only="svelte" scene={currentScene} />
   </div>
 
-  <!-- PERSISTENT OVERLAY (does NOT move) -->
   <div class="overlay" style="--nav-horizontal-margin: 2rem;">
     <a class="signLink" href="/" aria-label="Home" title="Home">
       <img class="hanging-sign" src="/bellassignroses.png" alt="Bella's Dresser sign" />
@@ -50,13 +44,11 @@ import { aboutSections } from "../scripts/stage-config";
 
     <img class="bella" src="/bella-pose3.png" alt="Bella" />
 
-    <!-- Side Navigation for 'About' sections -->
     <aside class="sideNav" aria-label="About sections">
       {aboutSections.map((s) => <a href={`/about#${s.id}`}>{s.label}</a>)}
     </aside>
   </div>
 
-  <!-- OPTIONAL FOREGROUND OVERLAY (does NOT move) -->
   <div class="foreground">
     <!-- <img src="/img/foreground-grass.png" alt="" /> -->
   </div>
