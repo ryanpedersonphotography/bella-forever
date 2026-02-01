@@ -1,60 +1,20 @@
 ---
 import Stage from "../components/Stage.astro";
-import stageRouterUrl from "../scripts/stage-router.ts?url";
-
-const pathname = Astro.url.pathname;
-const isSimple = pathname === '/simple' || pathname.startsWith('/simple/');
-const mode = isSimple ? 'simple' : 'fancy';
 ---
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>Bella's Dresser</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script is:inline define:vars={{ mode }}>
-      console.log(`[MODE] ${mode.toUpperCase()}`);
-      
-      (function(){
-        const path = location.pathname;
-
-        // Don’t gate these
-        if (path === "/enter" || path === "/simple") return;
-
-        // Remember where the user was trying to go (keeps /about, /shop, and hashes)
-        sessionStorage.setItem("bd_return_to", path + (location.hash || ""));
-
-        const v = localStorage.getItem("bd_experience");
-
-        // If simple is chosen, always bounce to /simple
-        if (v === "simple") {
-          location.replace("/simple");
-          return;
-        }
-
-        // If no choice yet, show the selector
-        if (!v) {
-          location.replace("/enter");
-          return;
-        }
-
-        // v === "fancy" -> do nothing
-      })();
-    </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;700&family=PT+Serif:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Quicksand:wght@400;500;600&family=Short+Stack&display=swap" rel="stylesheet" />
   </head>
 
   <body>
-    <Stage mode={mode} />
+    <Stage />
 
     <!-- The “page content slot” can change, stage stays -->
     <main id="page">
       <slot />
     </main>
-
-    <!-- ✅ Bundles in dev + prod, ONLY load in SIMPLE mode -->
-    {mode === 'simple' && <script type="module" src={stageRouterUrl}></script>}
   </body>
 </html>
