@@ -17,7 +17,7 @@
 
     // Intercept Nav Clicks (SPA behavior for Fancy Mode)
     const handleNavClick = (e: MouseEvent) => {
-        const a = (e.target as HTMLElement).closest<HTMLAnchorElement>(".navCluster a, a[aria-label='Home'], .sideNav a");
+        const a = (e.target as HTMLElement).closest<HTMLAnchorElement>(".navCluster a, a[aria-label='Home']");
         if (!a) return;
 
         const url = new URL(a.href, location.origin);

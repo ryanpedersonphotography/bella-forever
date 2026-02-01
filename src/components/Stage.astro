@@ -4,9 +4,6 @@ import PixiStage from "./PixiStage.svelte";
 
 const THEMES = { summer: { bg: "/sd.png" } };
 const theme = THEMES.summer;
-
-import { aboutSections } from "../scripts/stage-config";
-
 const pathname = Astro.url.pathname;
 const routesToScene: Record<string, string> = {
   "/": "home",
@@ -39,10 +36,6 @@ const currentScene = routesToScene[pathname] || "home";
     </nav>
 
     <img class="bella" src="/bella-pose3.png" alt="Bella" />
-
-    <aside class="sideNav" aria-label="About sections">
-      {aboutSections.map((s) => <a href={`/about#${s.id}`}>{s.label}</a>)}
-    </aside>
   </div>
 
   <div class="foreground"></div>
