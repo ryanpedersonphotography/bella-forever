@@ -1,6 +1,8 @@
 ---
 import NavButton from "./NavButton.svelte";
 import Handwriting from "./Handwriting.svelte";
+import PixiStage from "./PixiStage.svelte";
+
 const THEMES = {
   summer: {
     bg: "/sd.png",
@@ -36,14 +38,37 @@ const waves = [
 
 const SCENE_COUNT = 6;
 import { aboutSections } from "../scripts/stage-config";
+
+interface Props {
+  mode: 'simple' | 'fancy';
+}
+
+const { mode } = Astro.props;
+
+// Map URL to Scene
+const pathname = Astro.url.pathname;
+const routesToScene: Record<string, string> = {
+  "/": "home",
+  "/about": "about",
+  "/shop": "shop",
+  "/gallery": "gallery",
+  "/contact": "contact",
+  "/blog": "blog",
+};
+const currentScene = routesToScene[pathname] || "home";
 ---
 
 <div class="viewport">
   <!-- STATIONARY BACKGROUND -->
   <div class="background">
     <img class="bg-image" src={theme.bg} alt="Watercolor Sky Background" />
+    
+    <!-- FANCY MODE: Render Pixi Canvas -->
+    {mode === 'fancy' && <PixiStage client:only="svelte" scene={currentScene} />}
   </div>
 
+  <!-- SIMPLE MODE: Render DOM Camera & World (Legacy/Mobile) -->
+  {mode === 'simple' && (
   <div id="camera">
     <!-- MOVING WORLD (scenes only) -->
     <div id="world" class="world" style={`height:${SCENE_COUNT * 100}vh`}>
@@ -154,6 +179,7 @@ import { aboutSections } from "../scripts/stage-config";
       </section>
     </div>
   </div>
+  )}
 
   <!-- PERSISTENT OVERLAY (does NOT move) -->
   <div class="overlay" style="--nav-horizontal-margin: 2rem;">
